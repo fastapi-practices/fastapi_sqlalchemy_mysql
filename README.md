@@ -21,7 +21,7 @@
 
 ## 分支说明
 
-多分支维护成本过高，多余分支将被清理或停止维护，计划合成为一个 cookiecutter 新仓库，在此之前
+多分支维护成本过高，多余分支将被清理或停止维护，计划合成为一个 cookiecutter 新仓库，在此之前,
 请注意查看分支下相关说明
 
 ### 异步：
@@ -29,7 +29,7 @@
 #### async -> master
 
 ```text
-fastapi + sqlalchemy + alembic + aiomysql + aioredis
+fastapi + sqlalchemy + alembic + asyncmy + aioredis
 
 ✨: 邮箱验证码登录
 ⚠️: 停止维护
@@ -38,7 +38,7 @@ fastapi + sqlalchemy + alembic + aiomysql + aioredis
 #### async -> async-CRUDBase
 
 ```text
-fastapi + sqlalchemy + alembic + aiomysql + aioredis + APScheduler
+fastapi + sqlalchemy + alembic + asyncmy + aioredis + APScheduler
 
 ✨: 在 master 分支基础上扩展，集成 CRUD 封装和 APScheduler 定时任务
 ```
@@ -46,7 +46,7 @@ fastapi + sqlalchemy + alembic + aiomysql + aioredis + APScheduler
 #### async -> async-Plus
 
 ```text
-fastapi + sqlalchemy + alembic + aiomysql + aioredis + APScheduler + PyCasbin
+fastapi + sqlalchemy + alembic + asyncmy + aioredis + APScheduler + PyCasbin
 
 ✨: 在 async-CRUDBase 分支基础上扩展，集成来自 PyCasbin 的 RBAC 鉴权
 ```
