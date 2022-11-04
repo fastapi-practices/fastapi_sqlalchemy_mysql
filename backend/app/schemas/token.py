@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
 
 class Token(BaseModel):
-    code: Optional[int] = None
-    msg: Optional[str] = None
+    code: int = 200
+    msg: str = 'Success'
     access_token: str
-    token_type: str
+    token_type: str = 'Bearer'
     is_superuser: Optional[bool] = None
