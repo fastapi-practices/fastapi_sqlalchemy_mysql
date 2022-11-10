@@ -6,10 +6,29 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError, HTTPException
 from pydantic import ValidationError
 from starlette.responses import JSONResponse
+from uvicorn.protocols.http.h11_impl import STATUS_PHRASES
 
 from backend.app.common.exception.errors import BaseExceptionMixin
 from backend.app.common.response.response_schema import response_base
 from backend.app.core.conf import settings
+
+
+def _get_exception_code(status_code):
+    """
+    获取返回状态码, OpenAPI, Uvicorn... 可用状态码基于 RFC 定义, 详细代码见下方链接
+    `python 状态码标准支持 <https://github.com/python/cpython/blob/6e3cc72afeaee2532b4327776501eb8234ac787b/Lib/http
+    /__init__.py#L7>`__
+    `IANA 状态码注册表 <https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml>`__
+    :param status_code:
+    :return:
+    """
+    try:
+        STATUS_PHRASES[status_code]
+    except Exception:  # noqa
+        code = 400
+    else:
+        code = status_code
+    return code
 
 
 def register_exception(app: FastAPI):
@@ -23,7 +42,7 @@ def register_exception(app: FastAPI):
         :return:
         """
         return JSONResponse(
-            status_code=exc.status_code,
+            status_code=_get_exception_code(exc.status_code),
             content=response_base.fail(code=exc.status_code, msg=exc.detail).dict(),
             headers=exc.headers
         )
@@ -66,7 +85,7 @@ def register_exception(app: FastAPI):
         # 自定义
         if isinstance(exc, BaseExceptionMixin):
             return JSONResponse(
-                status_code=exc.code,
+                status_code=_get_exception_code(exc.code),
                 content=response_base.fail(
                     code=exc.code,
                     msg=str(exc.msg),
