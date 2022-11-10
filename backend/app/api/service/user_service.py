@@ -12,15 +12,17 @@ from fastapi_pagination.ext.async_sqlalchemy import paginate
 from backend.app.api import jwt
 from backend.app.common.exception import errors
 from backend.app.common.log import log
+from backend.app.common.redis import redis_client
+from backend.app.common.response.response_code import CodeEnum
 from backend.app.core.conf import settings
 from backend.app.core.path_conf import AvatarPath
 from backend.app.crud import crud_user
 from backend.app.database.db_mysql import async_db_session
 from backend.app.models import User
-from backend.app.schemas.user import CreateUser, ResetPassword, UpdateUser
+from backend.app.schemas.user import CreateUser, ResetPassword, UpdateUser, ELCode, Auth2
 from backend.app.utils import re_verify
-from backend.app.utils.generate_string import get_current_timestamp
-from backend.app.utils.send_email import send_verification_code_email
+from backend.app.utils.generate_string import get_current_timestamp, get_uuid
+from backend.app.utils.send_email import send_verification_code_email, SEND_EMAIL_LOGIN_TEXT
 
 
 async def login(form_data: OAuth2PasswordRequestForm):
@@ -55,29 +57,47 @@ async def login(form_data: OAuth2PasswordRequestForm):
 #         return access_token, current_user.is_superuser
 
 
-# async def login(*, obj: Auth2, request: Request):
-#     async with async_db_session() as db:
-#         current_user = await crud_user.get_user_by_username(db, obj.username)
-#         if not current_user:
-#             raise errors.NotFoundError(msg='用户名不存在')
-#         elif not jwt.verity_password(obj.password, current_user.password):
-#             raise errors.AuthorizationError(msg='密码错误')
-#         elif not current_user.is_active:
-#             raise errors.AuthorizationError(msg='该用户已被锁定，无法登录')
-#         try:
-#             rd_captcha = request.app.state.captcha_uid
-#             redis_code = await redis_client.get(f"{rd_captcha}")
-#             if not redis_code:
-#                 raise errors.ForbiddenError(msg='验证码失效，请重新获取')
-#         except AttributeError:
-#             raise errors.ForbiddenError(msg='验证码失效，请重新获取')
-#         if redis_code.lower() != obj.captcha.lower():
-#             raise errors.CodeError(error=CodeEnum.CAPTCHA_ERROR)
-#         # 更新登陆时间
-#         await crud_user.update_user_login_time(db, obj.username)
-#         # 创建token
-#         access_token = jwt.create_access_token(current_user.id)
-#         return access_token, current_user.is_superuser
+async def login_email(*, request: Request, obj: Auth2):
+    async with async_db_session() as db:
+        current_email = await crud_user.check_email(db, obj.email)
+        if not current_email:
+            raise errors.NotFoundError(msg='邮箱不存在')
+        username = await crud_user.get_username_by_email(db, obj.email)
+        current_user = await crud_user.get_user_by_username(db, username)
+        if not current_user.is_active:
+            raise errors.AuthorizationError(msg='该用户已被锁定，无法登录')
+        try:
+            uid = request.app.state.email_login_code
+        except Exception:
+            raise errors.ForbiddenError(msg='请先获取邮箱验证码再登陆')
+        r_code = await redis_client.get(f'{uid}')
+        if not r_code:
+            raise errors.NotFoundError(msg='验证码失效，请重新获取')
+        if r_code != obj.code:
+            raise errors.CodeError(error=CodeEnum.CAPTCHA_ERROR)
+        await crud_user.update_user_login_time(db, username)
+        access_token = jwt.create_access_token(current_user.id)
+        return access_token, current_user.is_superuser
+
+
+async def send_login_email_captcha(request: Request, obj: ELCode):
+    async with async_db_session() as db:
+        if not await crud_user.check_email(db, obj.email):
+            raise errors.NotFoundError(msg='邮箱不存在')
+        username = await crud_user.get_username_by_email(db, obj.email)
+        current_user = await crud_user.get_user_by_username(db, username)
+        if not current_user.is_active:
+            raise errors.ForbiddenError(msg='该用户已被锁定，无法登录，发送验证码失败')
+        try:
+            code = text_captcha()
+            await send_verification_code_email(obj.email, code, SEND_EMAIL_LOGIN_TEXT)
+        except Exception as e:
+            log.error('验证码发送失败 {}', e)
+            raise errors.ServerError(msg=f'验证码发送失败: {e}')
+        else:
+            uid = get_uuid()
+            await redis_client.set(uid, code, settings.EMAIL_LOGIN_CODE_MAX_AGE)
+            request.app.state.email_login_code = uid
 
 
 async def register(obj: CreateUser):

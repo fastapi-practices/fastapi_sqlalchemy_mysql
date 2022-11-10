@@ -11,7 +11,7 @@ from backend.app.common.response.response_schema import response_base
 from backend.app.core.path_conf import AvatarPath
 from backend.app.models import User
 from backend.app.schemas.token import Token
-from backend.app.schemas.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser
+from backend.app.schemas.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser, ELCode, Auth2
 from backend.app.utils.format_string import cut_path
 
 user = APIRouter()
@@ -30,11 +30,16 @@ async def user_login(form_data: OAuth2PasswordRequestForm = Depends()):
 #     return Token(access_token=token, is_superuser=is_super)
 
 
-# @user.post('/login', summary='用户登录', response_model=Token,
-#            description='带有图形验证码的 json 格式登录, 不支持api文档接口调试, 需使用第三方api工具, 例如: postman')
-# async def user_login(obj: Auth2, request: Request):
-#     token, is_super = await user_service.login(obj=obj, request=request)
-#     return Token(access_token=token, is_superuser=is_super)
+@user.post('/login/email/captcha', summary='发送邮箱登录验证码')
+async def user_login_email_captcha(request: Request, obj: ELCode):
+    await user_service.send_login_email_captcha(request, obj)
+    return response_base.response_200(msg='验证码发送成功')
+
+
+@user.post('/login/email', summary='邮箱登录', description='邮箱登录', response_model=Token)
+async def user_login_email(request: Request, obj: Auth2):
+    token, is_super = await user_service.login_email(request=request, obj=obj)
+    return Token(access_token=token, is_superuser=is_super)
 
 
 @user.post('/logout', summary='用户退出', dependencies=[Depends(jwt.get_current_user)])
