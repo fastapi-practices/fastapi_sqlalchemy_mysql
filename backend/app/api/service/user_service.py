@@ -21,6 +21,7 @@ from backend.app.database.db_mysql import async_db_session
 from backend.app.models import User
 from backend.app.schemas.user import CreateUser, ResetPassword, UpdateUser, ELCode, Auth2
 from backend.app.utils import re_verify
+from backend.app.utils.format_string import cut_path
 from backend.app.utils.generate_string import get_current_timestamp, get_uuid
 from backend.app.utils.send_email import send_verification_code_email, SEND_EMAIL_LOGIN_TEXT
 
@@ -187,16 +188,24 @@ async def get_user_info(username: str):
         user = await crud_user.get_user_by_username(db, username)
         if not user:
             raise errors.NotFoundError(msg='用户不存在')
+        if user.avatar is not None:
+            user.avatar = cut_path(AvatarPath + user.avatar)[1]
         return user
 
 
-async def update(*, current_user: User, obj: UpdateUser):
+async def update(*, username: str, current_user: User, obj: UpdateUser):
     async with async_db_session.begin() as db:
-        if current_user.username != obj.username:
+        if not current_user.is_superuser:
+            if not username == current_user.username:
+                raise errors.AuthorizationError
+        input_user = await crud_user.get_user_by_username(db, username)
+        if not input_user:
+            raise errors.NotFoundError(msg='用户不存在')
+        if input_user.username != obj.username:
             username = await crud_user.get_user_by_username(db, obj.username)
             if username:
                 raise errors.ForbiddenError(msg='该用户名已存在')
-        if current_user.email != obj.email:
+        if input_user.email != obj.email:
             _email = await crud_user.check_email(db, obj.email)
             if _email:
                 raise errors.ForbiddenError(msg='该邮箱已注册')
@@ -213,45 +222,57 @@ async def update(*, current_user: User, obj: UpdateUser):
         if obj.qq is not None:
             if not re_verify.is_qq(obj.qq):
                 raise errors.ForbiddenError(msg='QQ号码输入有误')
-        count = await crud_user.update_userinfo(db, current_user, obj)
+        count = await crud_user.update_userinfo(db, input_user, obj)
         return count
 
 
-async def update_avatar(*, current_user: User, avatar: UploadFile):
+async def update_avatar(*, username: str, current_user: User, avatar: UploadFile):
     async with async_db_session.begin() as db:
-        current_filename = await crud_user.get_avatar_by_username(db, current_user.username)
+        if not current_user.is_superuser:
+            if not username == current_user.username:
+                raise errors.AuthorizationError
+        input_user = await crud_user.get_user_by_username(db, username)
+        if not input_user:
+            raise errors.NotFoundError(msg='用户不存在')
+        input_user_avatar = input_user.avatar
         if avatar is not None:
-            if current_filename is not None:
+            if input_user_avatar is not None:
                 try:
-                    os.remove(AvatarPath + current_filename)
+                    os.remove(AvatarPath + input_user_avatar)
                 except Exception as e:
-                    log.error('用户 {} 更新头像时，原头像文件 {} 删除失败\n{}', current_user.username, current_filename,
+                    log.error('用户 {} 更新头像时，原头像文件 {} 删除失败\n{}', current_user.username, input_user_avatar,
                               e)
             new_file = await avatar.read()
             if 'image' not in avatar.content_type:
                 raise errors.ForbiddenError(msg='图片格式错误，请重新选择图片')
-            _file_name = str(get_current_timestamp()) + '_' + avatar.filename
+            file_name = str(get_current_timestamp()) + '_' + avatar.filename
             if not os.path.exists(AvatarPath):
                 os.makedirs(AvatarPath)
-            with open(AvatarPath + f'{_file_name}', 'wb') as f:
+            with open(AvatarPath + f'{file_name}', 'wb') as f:
                 f.write(new_file)
         else:
-            _file_name = current_filename
-        count = await crud_user.update_avatar(db, current_user, _file_name)
+            file_name = input_user_avatar
+        count = await crud_user.update_avatar(db, input_user, file_name)
         return count
 
 
-async def delete_avatar(current_user: User):
+async def delete_avatar(*, username: str, current_user: User):
     async with async_db_session.begin() as db:
-        current_filename = await crud_user.get_avatar_by_username(db, current_user.username)
-        if current_filename is not None:
+        if not current_user.is_superuser:
+            if not username == current_user.username:
+                raise errors.AuthorizationError
+        input_user = await crud_user.get_user_by_username(db, username)
+        if not input_user:
+            raise errors.NotFoundError(msg='用户不存在')
+        input_user_avatar = input_user.avatar
+        if input_user_avatar is not None:
             try:
-                os.remove(AvatarPath + current_filename)
+                os.remove(AvatarPath + input_user_avatar)
             except Exception as e:
-                log.error('用户 {} 删除头像文件 {} 失败\n{}', current_user.username, current_filename, e)
+                log.error('用户 {} 删除头像文件 {} 失败\n{}', input_user.username, input_user_avatar, e)
         else:
             raise errors.NotFoundError(msg='用户没有头像文件，请上传头像文件后再执行此操作')
-        count = await crud_user.delete_avatar(db, current_user.id)
+        count = await crud_user.delete_avatar(db, input_user.id)
         return count
 
 
@@ -279,14 +300,20 @@ async def update_active(pk: int):
             raise errors.NotFoundError(msg='用户不存在')
 
 
-async def delete(current_user: User):
+async def delete(*, username: str, current_user: User):
     async with async_db_session.begin() as db:
-        current_filename = await crud_user.get_avatar_by_username(db, current_user.username)
+        if not current_user.is_superuser:
+            if not username == current_user.username:
+                raise errors.AuthorizationError
+        input_user = await crud_user.get_user_by_username(db, username)
+        if not input_user:
+            raise errors.NotFoundError(msg='用户不存在')
+        input_user_avatar = input_user.avatar
         try:
-            if current_filename is not None:
-                os.remove(AvatarPath + current_filename)
+            if input_user_avatar is not None:
+                os.remove(AvatarPath + input_user_avatar)
         except Exception as e:
-            log.error(f'删除用户 {current_user.username} 头像文件:{current_filename} 失败\n{e}')
+            log.error(f'删除用户 {input_user.username} 头像文件:{input_user_avatar} 失败\n{e}')
         finally:
-            count = await crud_user.delete_user(db, current_user.id)
+            count = await crud_user.delete_user(db, input_user.id)
             return count

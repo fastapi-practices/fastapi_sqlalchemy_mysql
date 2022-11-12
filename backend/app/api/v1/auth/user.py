@@ -5,14 +5,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from backend.app.api import jwt
 from backend.app.api.service import user_service
-from backend.app.common.exception import errors
 from backend.app.common.pagination import Page
 from backend.app.common.response.response_schema import response_base
-from backend.app.core.path_conf import AvatarPath
 from backend.app.models import User
 from backend.app.schemas.token import Token
 from backend.app.schemas.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser, ELCode, Auth2
-from backend.app.utils.format_string import cut_path
 
 user = APIRouter()
 
@@ -73,8 +70,6 @@ async def password_reset_done():
 @user.get('/{username}', summary='查看用户信息', dependencies=[Depends(jwt.get_current_user)])
 async def get_userinfo(username: str):
     current_user = await user_service.get_user_info(username)
-    if current_user.avatar is not None:
-        current_user.avatar = cut_path(AvatarPath + current_user.avatar)[1]
     return response_base.response_200(
         msg='查看用户信息成功',
         data=current_user,
@@ -84,11 +79,7 @@ async def get_userinfo(username: str):
 
 @user.put('/{username}', summary='更新用户信息')
 async def update_userinfo(username: str, obj: UpdateUser, current_user: User = Depends(jwt.get_current_user)):
-    if not current_user.is_superuser:
-        if not username == current_user.username:
-            raise errors.AuthorizationError
-    input_user = await user_service.get_user_info(username)
-    count = await user_service.update(current_user=input_user, obj=obj)
+    count = await user_service.update(username=username, current_user=current_user, obj=obj)
     if count > 0:
         return response_base.response_200(msg='更新用户信息成功')
     return response_base.fail()
@@ -96,11 +87,7 @@ async def update_userinfo(username: str, obj: UpdateUser, current_user: User = D
 
 @user.put('/{username}/avatar', summary='更新头像')
 async def update_avatar(username: str, avatar: UploadFile, current_user: User = Depends(jwt.get_current_user)):
-    if not current_user.is_superuser:
-        if not username == current_user.username:
-            raise errors.AuthorizationError
-    input_user = await user_service.get_user_info(username)
-    count = await user_service.update_avatar(current_user=input_user, avatar=avatar)
+    count = await user_service.update_avatar(username=username, current_user=current_user, avatar=avatar)
     if count > 0:
         return response_base.response_200(msg='更新头像成功')
     return response_base.fail()
@@ -108,11 +95,7 @@ async def update_avatar(username: str, avatar: UploadFile, current_user: User = 
 
 @user.delete('/{username}/avatar', summary='删除头像文件')
 async def delete_avatar(username: str, current_user: User = Depends(jwt.get_current_user)):
-    if not current_user.is_superuser:
-        if not username == current_user.username:
-            raise errors.AuthorizationError
-    input_user = await user_service.get_user_info(username)
-    count = await user_service.delete_avatar(input_user)
+    count = await user_service.delete_avatar(username=username, current_user=current_user)
     if count > 0:
         return response_base.response_200(msg='删除用户头像成功')
     return response_base.fail()
@@ -141,11 +124,7 @@ async def active_set(pk: int):
 
 @user.delete('/{username}', summary='用户注销', description='用户注销 != 用户退出，注销之后用户将从数据库删除')
 async def delete_user(username: str, current_user: User = Depends(jwt.get_current_user)):
-    if not current_user.is_superuser:
-        if not username == current_user.username:
-            raise errors.AuthorizationError
-    input_user = await user_service.get_user_info(username)
-    count = await user_service.delete(input_user)
+    count = await user_service.delete(username=username, current_user=current_user)
     if count > 0:
         return response_base.response_200(msg='用户注销成功')
     return response_base.fail()

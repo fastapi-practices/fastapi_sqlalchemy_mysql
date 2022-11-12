@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from typing import Any, Union, Optional
+from typing import Any, Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -59,7 +59,7 @@ def create_access_token(data: Union[int, Any], expires_delta: Union[timedelta, N
     return encoded_jwt
 
 
-async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_schema)) -> Optional[User]:
+async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_schema)) -> User:
     """
     通过token获取当前用户
 
@@ -76,6 +76,8 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
     except (jwt.JWTError, ValidationError):
         raise TokenError
     user = await crud_user.get_user_by_id(db, user_id)
+    if not user:
+        raise TokenError
     return user
 
 

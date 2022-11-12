@@ -4,12 +4,11 @@ import asyncio
 
 from email_validator import EmailNotValidError, validate_email
 from faker import Faker
-from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.app.api.jwt import get_hash_password
+from backend.app.common.log import log
 from backend.app.database.db_mysql import async_db_session
 from backend.app.models import User
-from backend.app.common.log import log
-from backend.app.api.jwt import get_hash_password
 
 
 class InitData:
