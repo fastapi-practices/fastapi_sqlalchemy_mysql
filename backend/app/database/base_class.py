@@ -8,7 +8,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr, MappedAsDataclass
 from typing_extensions import Annotated
 
-# 通用数据类主键
+# 通用 Mapped 类型主键, 需手动添加，参考以下使用方式
+# MappedBase -> id: Mapped[id_key]
+# DataClassBase && Base -> id: Mapped[id_key] = mapped_column(init=False)
 id_key = Annotated[int, mapped_column(primary_key=True, index=True, autoincrement=True, comment='主键id')]
 
 
@@ -19,9 +21,8 @@ class _BaseMixin:
     Mixin: 一种面向对象编程概念, 使结构变得更加清晰, `Wiki <https://en.wikipedia.org/wiki/Mixin/>`__
     """
 
-    id: Mapped[id_key] = mapped_column(init=False)
     create_user: Mapped[int] = mapped_column(comment='创建者')
-    update_user: Mapped[Optional[int]] = mapped_column(comment='修改者')
+    update_user: Mapped[Optional[int]] = mapped_column(default=None, comment='修改者')
     created_time: Mapped[datetime] = mapped_column(init=False, default=func.now(), comment='创建时间')
     updated_time: Mapped[Optional[datetime]] = mapped_column(init=False, onupdate=func.now(), comment='更新时间')
 
@@ -35,7 +36,7 @@ class MappedBase(DeclarativeBase):
     """
 
     @declared_attr.directive
-    def __tablename__(cls) -> Optional[str]:  # noqa
+    def __tablename__(cls) -> str:  # noqa
         return cls.__name__.lower()
 
 
@@ -43,7 +44,7 @@ class DataClassBase(MappedAsDataclass, MappedBase):
     """
     声明性数据类基类, 它将带有数据类集成, 允许使用更高级配置, 但你必须注意它的一些特性, 尤其是和 DeclarativeBase 一起使用时
 
-    `MappedAsDataclass <https://docs.sqlalchemy.org/en/20/tutorial/metadata.html#declaring-mapped-classes>`__
+    `MappedAsDataclass <https://docs.sqlalchemy.org/en/20/orm/dataclasses.html#orm-declarative-native-dataclasses>`__
     """
 
     __abstract__ = True
