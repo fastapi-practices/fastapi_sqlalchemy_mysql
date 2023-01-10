@@ -60,7 +60,7 @@ def register_exception(app: FastAPI):
         :return:
         """
         # 常规
-        if isinstance(exc, (ValidationError, RequestValidationError)):
+        if isinstance(exc, RequestValidationError):
             message = ''
             data = {}
             for raw_error in exc.raw_errors:
