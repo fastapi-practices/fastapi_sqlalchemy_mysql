@@ -33,7 +33,7 @@
 #### async -> master
 
 ```text
-fastapi + sqlalchemy2.0 + alembic + asyncmy + aioredis
+fastapi-0.85.1 + sqlalchemy2.0 + alembic + asyncmy + aioredis
 
 ✨: 邮箱验证码登录
 ⚠️: 停止维护
@@ -45,15 +45,16 @@ fastapi + sqlalchemy2.0 + alembic + asyncmy + aioredis
 fastapi + sqlalchemy2.0 + alembic + asyncmy + aioredis + APScheduler
 
 ✨: 在 master 分支基础上扩展，集成 CRUD 封装和 APScheduler 定时任务
-⚠️: 计划停止维护
+📢: 长期支持
 ```
 
 #### async -> async-Plus
 
 ```text
-fastapi + sqlalchemy2.0 + alembic + asyncmy + aioredis + APScheduler + PyCasbin
+fastapi-0.95.0 + sqlalchemy2.0 + alembic + asyncmy + aioredis + APScheduler + PyCasbin
 
 ✨: 在 async-CRUDBase 分支基础上扩展，集成来自 PyCasbin 的 RBAC 鉴权
+⚠️: 停止维护
 ```
 
 ### 同步：
@@ -61,7 +62,7 @@ fastapi + sqlalchemy2.0 + alembic + asyncmy + aioredis + APScheduler + PyCasbin
 #### sync -> sync
 
 ```text
-fastapi + sqlalchemy2.0 + alembic + pymysql + redis
+fastapi-0.85.1 + sqlalchemy2.0 + alembic + pymysql + redis
 
 ✨: 图片验证码登录
 ⚠️: 停止维护
@@ -73,15 +74,16 @@ fastapi + sqlalchemy2.0 + alembic + pymysql + redis
 fastapi + sqlalchemy2.0 + alembic + pymysql + redis + APScheduler
 
 ✨: 在 sync 分支基础上扩展，集成 CRUD 封装和 APScheduler 定时任务
-⚠️: 计划停止维护
+📢: 长期支持
 ```
 
 #### sync -> sync-Plus
 
 ```text
-fastapi + sqlalchemy2.0 + alembic + pymysql + redis + APScheduler + PyCasbin
+fastapi-0.95.0 + sqlalchemy2.0 + alembic + pymysql + redis + APScheduler + PyCasbin
 
 ✨: 在 sync-CRUDBase 分支基础上扩展，集成来自 PyCasbin 的 RBAC 鉴权
+⚠️: 停止维护
 ```
 
 ## 下载：
