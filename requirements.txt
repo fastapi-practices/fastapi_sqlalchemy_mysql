@@ -5,7 +5,7 @@ python-jose==3.3.0
 bcrypt==3.2.2
 passlib==1.7.4
 pydantic==1.10.2
-loguru==0.4.1
+loguru==0.5.3
 aioredis==2.0.1
 alembic==1.7.4
 uvicorn[standard]==0.13.4
