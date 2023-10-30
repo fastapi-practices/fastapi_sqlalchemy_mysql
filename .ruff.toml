@@ -1,0 +1,30 @@
+line-length = 120
+target-version = "py310"
+cache-dir = "./.ruff_cache"
+
+[lint]
+select = [
+    "E",
+    "F",
+    "W505",
+    "SIM101",
+    "SIM114",
+    "PGH004",
+    "PLE1142",
+    "RUF100",
+    "I002",
+    "F404",
+    "TCH",
+    "UP007"
+]
+
+[lint.isort]
+lines-between-types = 1
+
+[lint.per-file-ignores]
+"backend/app/api/v1/*.py" = ["TCH"]
+"backend/app/models/*.py" = ["TCH003"]
+"backend/app/**/__init__.py" = ["F401"]
+
+[format]
+quote-style = "single"
