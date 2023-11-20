@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from uuid import uuid4
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from backend.app.database.db_mysql import uuid4_str
 from backend.app.models.base import DataClassBase, id_key
 from backend.app.utils.timezone import timezone
 
@@ -16,7 +16,7 @@ class User(DataClassBase):
     __tablename__ = 'sys_user'
 
     id: Mapped[id_key] = mapped_column(init=False)
-    uuid: Mapped[str] = mapped_column(String(50), init=False, default_factory=uuid4, unique=True)
+    uuid: Mapped[str] = mapped_column(String(50), init=False, default_factory=uuid4_str, unique=True)
     username: Mapped[str] = mapped_column(String(20), unique=True, index=True, comment='用户名')
     password: Mapped[str] = mapped_column(String(255), comment='密码')
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True, comment='邮箱')
