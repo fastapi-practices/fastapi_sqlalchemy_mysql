@@ -14,6 +14,7 @@ from typing_extensions import Annotated
 from backend.app.common.exception.errors import TokenError, AuthorizationError
 from backend.app.core.conf import settings
 from backend.app.crud.crud_user import UserDao
+from backend.app.database.db_mysql import CurrentSession
 from backend.app.models.user import User
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -24,7 +25,7 @@ oauth2_schema = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL_SWAGGER)
 @sync_to_async
 def get_hash_password(password: str) -> str:
     """
-    使用hash算法加密密码
+    使用 hash 算法加密密码
 
     :param password: 密码
     :return: 加密后的密码
@@ -62,10 +63,11 @@ def create_access_token(data: int | Any, expires_delta: timedelta | None = None)
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_schema)) -> User:
+async def get_current_user(db: CurrentSession, token: str = Depends(oauth2_schema)) -> User:
     """
-    通过token获取当前用户
+    通过 token 获取当前用户
 
+    :param db:
     :param token:
     :return:
     """
@@ -77,7 +79,7 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> User:
             raise TokenError
     except (jwt.JWTError, ValidationError):
         raise TokenError
-    user = await UserDao.get_user_by_id(user_id)
+    user = await UserDao.get_user_by_id(db, user_id)
     if not user:
         raise TokenError
     return user
