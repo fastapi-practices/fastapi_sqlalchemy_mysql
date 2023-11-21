@@ -70,5 +70,5 @@ class DeleteUser(SchemaBase):
 
 class ResetPassword(SchemaBase):
     username: str
-    password1: str
-    password2: str
+    new_password: str
+    confirm_password: str
