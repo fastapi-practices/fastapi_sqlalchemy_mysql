@@ -50,7 +50,7 @@ class UserService:
                     raise errors.ForbiddenError(msg='验证码失效，请重新获取')
             except AttributeError:
                 raise errors.ForbiddenError(msg='验证码失效，请重新获取')
-            if redis_code.lower() != obj.captcha_code.lower():
+            if redis_code.lower() != obj.captcha.lower():
                 raise errors.CustomError(error=CustomCode.CAPTCHA_ERROR)
             await UserDao.update_user_login_time(db, user.username, login_time=UserService.login_time)
             access_token = await jwt.create_access_token(user.id)
