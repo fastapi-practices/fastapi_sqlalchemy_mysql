@@ -64,10 +64,6 @@ class GetUserInfo(UpdateUser):
     last_login_time: datetime.datetime | None = None
 
 
-class DeleteUser(SchemaBase):
-    id: int
-
-
 class ResetPassword(SchemaBase):
     username: str
     new_password: str
