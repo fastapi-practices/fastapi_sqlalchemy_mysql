@@ -9,7 +9,7 @@ from sqlalchemy.sql import Select
 from backend.app.common import jwt
 from backend.app.crud.base import CRUDBase
 from backend.app.models import User
-from backend.app.schemas.user import CreateUser, DeleteUser, UpdateUser, Avatar
+from backend.app.schemas.user import CreateUser, UpdateUser, Avatar
 
 
 class CRUDUser(CRUDBase[User, CreateUser, UpdateUser]):
@@ -41,8 +41,8 @@ class CRUDUser(CRUDBase[User, CreateUser, UpdateUser]):
         user = await db.execute(update(self.model).where(self.model.id == current_user.id).values(avatar=avatar.url))
         return user.rowcount
 
-    async def delete_user(self, db: AsyncSession, user_id: DeleteUser) -> int:
-        user = await super().delete(db, pk=user_id)
+    async def delete_user(self, db: AsyncSession, user_id: int) -> int:
+        user = await super().delete(db, user_id)
         return user.rowcount
 
     async def check_email(self, db: AsyncSession, email: str) -> User:

@@ -147,5 +147,5 @@ class UserService:
             input_user = await UserDao.get_user_by_username(db, username)
             if not input_user:
                 raise errors.NotFoundError(msg='用户不存在')
-            count = await UserDao.delete(db, input_user.id)
+            count = await UserDao.delete_user(db, input_user.id)
             return count
