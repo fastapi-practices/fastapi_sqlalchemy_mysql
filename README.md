@@ -76,9 +76,22 @@
 3. 等待命令自动完成
 4. 浏览器访问：http://127.0.0.1:8000/api/v1/docs
 
+## 互动
+
+有且仅有当前一个频道，请注意辨别真伪
+
+<table>
+  <tr>
+    <td><a href="https://t.me/+ZlPhIFkPp7E4NGI1">直链跳转</a></td>
+  </tr>
+  <tr>
+    <td> Telegram </td>
+  </tr>
+</table>
+
 ## 赞助
 
-> 如果此项目能够帮助到你，你可以赞助作者一些咖啡豆表示鼓励 :coffee:
+如果此项目能够帮助到你，你可以赞助作者一些咖啡豆表示鼓励 :coffee:
 
 <table>
   <tr>
