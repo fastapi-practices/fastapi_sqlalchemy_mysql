@@ -7,8 +7,8 @@ bcrypt==4.0.1
 cryptography==41.0.6
 email-validator==2.0.0
 fast-captcha==0.2.1
-fastapi==0.104.0
-fastapi-limiter==0.1.5
+fastapi==0.108.0
+fastapi-limiter==0.1.6
 fastapi-pagination==0.12.11
 loguru==0.7.2
 passlib==1.7.4
@@ -18,9 +18,8 @@ pydantic==2.4.2
 pydantic-settings==2.0.3
 python-jose==3.3.0
 python-multipart==0.0.6
-redis[hiredis]==4.6.0
+redis[hiredis]==5.0.1
 SQLAlchemy==2.0.22
-starlette==0.27.0
 supervisor==4.2.5
 tzdata==2023.3
 uvicorn[standard]==0.23.2

@@ -80,14 +80,9 @@
 
 有且仅有当前一个频道，请注意辨别真伪
 
-<table>
-  <tr>
-    <td><a href="https://t.me/+ZlPhIFkPp7E4NGI1">直链跳转</a></td>
-  </tr>
-  <tr>
-    <td> Telegram </td>
-  </tr>
-</table>
+| [直链跳转](https://t.me/+ZlPhIFkPp7E4NGI1) |
+|----------------------------------------|
+| Telegram（科学上网）                         |
 
 ## 赞助
 
