@@ -5,7 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Query
 
 from backend.app.common.jwt import CurrentUser, DependsJwtUser
-from backend.app.common.pagination import PageDepends, paging_data
+from backend.app.common.pagination import DependsPagination, paging_data
 from backend.app.common.response.response_schema import response_base
 from backend.app.database.db_mysql import CurrentSession
 from backend.app.schemas.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser, Avatar
@@ -52,7 +52,7 @@ async def update_avatar(username: str, avatar: Avatar):
     return await response_base.fail()
 
 
-@router.get('', summary='（模糊条件）分页获取所有用户', dependencies=[DependsJwtUser, PageDepends])
+@router.get('', summary='（模糊条件）分页获取所有用户', dependencies=[DependsJwtUser, DependsPagination])
 async def get_all_users(
     db: CurrentSession,
     username: Annotated[str | None, Query()] = None,

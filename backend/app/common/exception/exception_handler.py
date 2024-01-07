@@ -15,9 +15,7 @@ from backend.app.common.log import log
 from backend.app.common.response.response_schema import response_base
 from backend.app.core.conf import settings
 from backend.app.schemas.base import (
-    convert_validation_errors,
     CUSTOM_VALIDATION_ERROR_MESSAGES,
-    convert_usage_errors,
     CUSTOM_USAGE_ERROR_MESSAGES,
 )
 
@@ -51,25 +49,24 @@ async def _validation_exception_handler(e: RequestValidationError | ValidationEr
     :param e:
     :return:
     """
-
-    message = ''
-    errors = await convert_validation_errors(e, CUSTOM_VALIDATION_ERROR_MESSAGES)
-    for error in errors[:1]:
-        if error.get('type') == 'json_invalid':
-            message += 'json解析失败'
-        else:
-            error_input = error.get('input')
+    errors = []
+    for error in e.errors():
+        custom_message = CUSTOM_VALIDATION_ERROR_MESSAGES.get(error['type'])
+        if custom_message:
             ctx = error.get('ctx')
-            ctx_error = ctx.get('error') if ctx else None
-            field = str(error.get('loc')[-1])
-            error_msg = error.get('msg')
-            message += f'{field} {ctx_error if ctx else error_msg}: {error_input}' + '.'
-    content = {
-        'code': 422,
-        'msg': '请求参数非法' if len(message) == 0 else f'请求参数非法: {message}',
-        'data': {'errors': e.errors()} if message == '' and settings.UVICORN_RELOAD is True else None,
-    }
-    return JSONResponse(status_code=422, content=await response_base.fail(**content))
+            error['msg'] = custom_message.format(**ctx) if ctx else custom_message
+        errors.append(error)
+    error = errors[0]
+    if error.get('type') == 'json_invalid':
+        message = 'json解析失败'
+    else:
+        error_input = error.get('input')
+        field = str(error.get('loc')[-1])
+        error_msg = error.get('msg')
+        message = f'{field} {error_msg}，输入：{error_input}'
+    msg = f'请求参数非法: {message}'
+    data = {'errors': errors} if settings.ENVIRONMENT == 'dev' else None
+    return JSONResponse(status_code=422, content=await response_base.fail(code=422, msg=msg, data=data))
 
 
 def register_exception(app: FastAPI):
@@ -83,7 +80,6 @@ def register_exception(app: FastAPI):
         :return:
         """
         content = {'code': exc.status_code, 'msg': exc.detail}
-        request.state.__request_http_exception__ = content  # 用于在中间件中获取异常信息
         return JSONResponse(
             status_code=await _get_exception_code(exc.status_code),
             content=await response_base.fail(**content),
@@ -123,9 +119,26 @@ def register_exception(app: FastAPI):
         """
         return JSONResponse(
             status_code=500,
+            content=await response_base.fail(code=exc.code, msg=CUSTOM_USAGE_ERROR_MESSAGES.get(exc.code)),
+        )
+
+    @app.exception_handler(AssertionError)
+    async def assertion_error_handler(request: Request, exc: AssertionError):
+        """
+        断言错误处理
+
+        :param request:
+        :param exc:
+        :return:
+        """
+        return JSONResponse(
+            status_code=500,
             content=await response_base.fail(
-                code=exc.code, msg=await convert_usage_errors(exc, CUSTOM_USAGE_ERROR_MESSAGES)
-            ),
+                code=500,
+                msg=str(''.join(exc.args) if exc.args else exc.__doc__),
+            )
+            if settings.ENVIRONMENT == 'dev'
+            else await response_base.fail(code=500, msg='Internal Server Error'),
         )
 
     @app.exception_handler(Exception)
@@ -140,23 +153,12 @@ def register_exception(app: FastAPI):
         if isinstance(exc, BaseExceptionMixin):
             return JSONResponse(
                 status_code=await _get_exception_code(exc.code),
-                content=await response_base.fail(code=exc.code, msg=str(exc.msg), data=exc.data if exc.data else None),
-                background=exc.background,
-            )
-
-        elif isinstance(exc, AssertionError):
-            return JSONResponse(
-                status_code=500,
                 content=await response_base.fail(
-                    code=500,
-                    msg=','.join(exc.args)
-                    if exc.args
-                    else exc.__repr__()
-                    if not exc.__repr__().startswith('AssertionError()')
-                    else exc.__doc__,
-                )
-                if settings.ENVIRONMENT == 'dev'
-                else await response_base.fail(code=500, msg='Internal Server Error'),
+                    code=exc.code,
+                    msg=str(exc.msg),
+                    data=exc.data if exc.data else None,
+                ),
+                background=exc.background,
             )
 
         else:
@@ -196,7 +198,11 @@ def register_exception(app: FastAPI):
             origin = request.headers.get('origin')
             if origin:
                 cors = CORSMiddleware(
-                    app=app, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*']
+                    app=app,
+                    allow_origins=['*'],
+                    allow_credentials=True,
+                    allow_methods=['*'],
+                    allow_headers=['*'],
                 )
                 response.headers.update(cors.simple_headers)
                 has_cookie = 'cookie' in request.headers
