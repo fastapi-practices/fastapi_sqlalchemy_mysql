@@ -4,7 +4,7 @@ alembic==1.12.1
 asgiref==3.7.2
 asyncmy==0.2.8
 bcrypt==4.0.1
-cryptography==41.0.6
+cryptography==42.0.4
 email-validator==2.0.0
 fast-captcha==0.2.1
 fastapi==0.108.0
