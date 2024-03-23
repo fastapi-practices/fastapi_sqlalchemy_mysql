@@ -1,0 +1,35 @@
+line-length = 120
+unsafe-fixes = true
+cache-dir = ".ruff_cache"
+target-version = "py310"
+
+[lint]
+select = [
+    "E",
+    "F",
+    "W505",
+    "SIM101",
+    "SIM114",
+    "PGH004",
+    "PLE1142",
+    "RUF100",
+    "I002",
+    "F404",
+    "TCH",
+    "UP007"
+]
+preview = true
+
+[lint.isort]
+lines-between-types = 1
+order-by-type = true
+
+[lint.per-file-ignores]
+"**/api/v1/*.py" = ["TCH"]
+"**/model/*.py" = ["TCH003"]
+"**/model/__init__.py" = ["F401"]
+
+[format]
+preview = true
+quote-style = "single"
+docstring-code-format = true
