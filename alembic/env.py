@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# ruff: noqa: E402
 import asyncio
 import os
 from logging.config import fileConfig
@@ -24,12 +26,15 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from common.msd.model import MappedBase  # noqa: E402
+# https://alembic.sqlalchemy.org/en/latest/autogenerate.html#autogenerating-multiple-metadata-collections
+from app.admin.model import MappedBase as AdminModel
 
-target_metadata = MappedBase.metadata
+target_metadata = [
+    AdminModel.metadata,
+]
 
 # other values from the config, defined by the needs of env.py,
-from database.db_mysql import SQLALCHEMY_DATABASE_URL  # noqa: E402
+from database.db_mysql import SQLALCHEMY_DATABASE_URL
 
 config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL)
 
@@ -49,7 +54,7 @@ def run_migrations_offline():
     url = config.get_main_option('sqlalchemy.url')
     context.configure(
         url=url,
-        target_metadata=target_metadata,
+        target_metadata=target_metadata,  # type: ignore
         literal_binds=True,
         dialect_opts={'paramstyle': 'named'},
     )
@@ -59,7 +64,7 @@ def run_migrations_offline():
 
 
 def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata)  # type: ignore
 
     with context.begin_transaction():
         context.run_migrations()
