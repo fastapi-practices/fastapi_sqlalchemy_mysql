@@ -20,4 +20,4 @@ RUN mkdir -p /var/log/fastapi_server
 
 EXPOSE 8001
 
-CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "127.0.0.1", "--port", "8000"]
