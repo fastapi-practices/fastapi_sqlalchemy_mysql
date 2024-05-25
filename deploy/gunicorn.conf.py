@@ -2,7 +2,7 @@
 bind = '0.0.0.0:8001'
 
 # 工作目录
-chdir = '/fsm/app'
+chdir = '/fsm/backend/'
 
 # 并行工作进程数
 workers = 4

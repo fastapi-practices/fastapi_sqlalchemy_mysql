@@ -28,7 +28,7 @@
    pip install -r requirements.txt
    ```
 
-2. 创建一个数据库 `fsm`, 选择 utf8mb4 编码
+2. 创建一个数据库 `fsm`, 选择 `utf8mb4` 编码
 3. 安装启动 Redis
 4. 创建一个 `.env` 文件
 
@@ -48,7 +48,16 @@
     alembic upgrade head
     ```
 
-7. 执行 main.py 文件启动服务
+7. 启动 fastapi 服务
+
+   ```shell
+   # 帮助
+   fastapi --help
+   
+   # 开发模式
+   fastapi dev main.py
+   ```
+   
 8. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
 
 ---
@@ -66,7 +75,7 @@
     ```shell
     cd deploy/docker-compose/
    
-    cp .env.server ../../.env
+    cp .env.server ../../../backend/.env
     ```
 
 2. 执行一键启动命令

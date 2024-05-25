@@ -1,9 +1,9 @@
 __pycache__/
 .idea/
-.env
+backend/.env
 .venv/
 venv/
-log/
-alembic/versions/
+backend/log/
+backend/alembic/versions/
 .ruff_cache/
 .pdm-python

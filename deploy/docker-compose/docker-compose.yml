@@ -20,7 +20,7 @@ services:
       - fsm_mysql
       - fsm_redis
     volumes:
-      - fsm_static:/fsm/static
+      - fsm_static:/fsm/backend/static
     networks:
       - fsm_network
     command:
@@ -71,6 +71,6 @@ services:
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - fsm_static:/www/fsm/static
+      - fsm_static:/www/fsm/backend/static
     networks:
       - fsm_network
