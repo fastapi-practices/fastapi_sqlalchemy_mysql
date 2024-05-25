@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from typing_extensions import Annotated
 
 from backend.common.log import log
-from backend.common.msd.model import MappedBase
+from backend.common.model import MappedBase
 from backend.core.conf import settings
 
 

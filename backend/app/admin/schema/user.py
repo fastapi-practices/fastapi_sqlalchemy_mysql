@@ -5,7 +5,7 @@ import datetime
 from email_validator import validate_email, EmailNotValidError
 from pydantic import Field, EmailStr, field_validator, ConfigDict, UUID4, HttpUrl
 
-from backend.common.msd.schema import SchemaBase
+from backend.common.schema import SchemaBase
 
 
 class Auth(SchemaBase):
