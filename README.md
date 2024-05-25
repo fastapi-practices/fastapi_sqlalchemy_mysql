@@ -30,15 +30,21 @@
 
 2. 创建一个数据库 `fsm`, 选择 `utf8mb4` 编码
 3. 安装启动 Redis
-4. 创建一个 `.env` 文件
+4. 进入 backend 目录
+
+   ```shell
+   cd backend
+   ```
+   
+5. 创建一个 `.env` 文件
 
    ```shell
    touch .env
    cp .env.example .env
    ```
 
-5. 按需修改配置文件 `core/conf.py` 和 `.env`
-6. 数据库迁移 [alembic](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
+6. 按需修改配置文件 `core/conf.py` 和 `.env`
+7. 数据库迁移 [alembic](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
 
     ```shell
     # 生成迁移文件
@@ -48,7 +54,7 @@
     alembic upgrade head
     ```
 
-7. 启动 fastapi 服务
+8. 启动 fastapi 服务
 
    ```shell
    # 帮助
@@ -58,7 +64,7 @@
    fastapi dev main.py
    ```
    
-8. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
+9. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
 
 ---
 
