@@ -14,7 +14,7 @@ from backend.common.exception.errors import BaseExceptionMixin
 from backend.common.log import log
 from backend.common.response.response_schema import response_base
 from backend.core.conf import settings
-from backend.common.msd.schema import (
+from backend.common.schema import (
     CUSTOM_VALIDATION_ERROR_MESSAGES,
     CUSTOM_USAGE_ERROR_MESSAGES,
 )
