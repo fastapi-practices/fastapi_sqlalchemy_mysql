@@ -46,7 +46,7 @@ nodeenv==1.8.0
 orjson==3.10.3
 passlib==1.7.4
 path==16.14.0
-pillow==9.5.0
+pillow==10.3.0
 platformdirs==4.2.2
 pre-commit==3.7.1
 pyasn1==0.6.0
