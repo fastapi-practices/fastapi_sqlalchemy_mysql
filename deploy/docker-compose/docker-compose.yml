@@ -41,7 +41,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       TZ: Asia/Shanghai
     volumes:
-      - fba_mysql:/var/lib/mysql
+      - fsm_mysql:/var/lib/mysql
     networks:
       - fsm_network
     command:
