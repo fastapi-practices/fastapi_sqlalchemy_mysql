@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, validate_email
+from pydantic_extra_types.phone_numbers import PhoneNumber
 
-# 自定义验证错误信息不包含验证预期内容，如果想添加预期内容，只需在自定义错误信息中添加 {xxx(预期内容字段)} 即可，预期内容字段参考以下链接  # noqa: E501
+# 自定义验证错误信息不包含验证预期内容（也就是输入内容），受支持的预期内容字段参考以下链接
 # https://github.com/pydantic/pydantic-core/blob/a5cb7382643415b716b1a7a5392914e50f726528/tests/test_errors.py#L266
 # 替换预期内容字段方式，参考以下链接
 # https://github.com/pydantic/pydantic/blob/caa78016433ec9b16a973f92f187a7b6bfde6cb5/docs/errors/errors.md?plain=1#L232
@@ -34,7 +35,7 @@ CUSTOM_VALIDATION_ERROR_MESSAGES = {
     'decimal_type': '小数类型输入错误',
     'decimal_whole_digits': '小数位数输入错误',
     'dict_type': '字典类型输入错误',
-    'enum': '枚举成员输入错误，允许：{expected}',
+    'enum': '枚举成员输入错误，允许 {expected}',
     'extra_forbidden': '禁止额外字段输入',
     'finite_number': '有限值输入错误',
     'float_parsing': '浮点数输入解析错误',
@@ -135,6 +136,16 @@ CUSTOM_USAGE_ERROR_MESSAGES = {
     'type-adapter-config-unused': '类型适配器配置项定义错误',
     'root-model-extra': '根模型禁止定义额外字段',
 }
+
+
+class CustomPhoneNumber(PhoneNumber):
+    default_region_code = 'CN'
+
+
+class CustomEmailStr(EmailStr):
+    @classmethod
+    def _validate(cls, __input_value: str) -> str:
+        return None if __input_value == '' else validate_email(__input_value)[1]
 
 
 class SchemaBase(BaseModel):

@@ -1,21 +1,5 @@
 # FastAPI SQLAlchemy MySQL
 
-[![Static Badge](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-
-> [!TIP]
-> 此仓库是我们构建的 FastAPI 基础架构便捷版，完整版请查看：
-> [fastapi_best_architecture](https://github.com/fastapi-practices/fastapi_best_architecture)
-
-## 特征
-
-- [x] FastAPI
-- [x] Async design
-- [x] Restful API
-- [x] SQLAlchemy 2.0
-- [x] Pydantic 2.0
-- [x] Docker
-- [ ] ......
-
 ## 本地开发
 
 * Python 3.10+
@@ -35,7 +19,7 @@
    ```shell
    cd backend
    ```
-   
+
 5. 创建一个 `.env` 文件
 
    ```shell
@@ -63,39 +47,29 @@
    # 开发模式
    fastapi dev main.py
    ```
-   
+
 9. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
 
 ---
 
 ### Docker
 
-> [!WARNING]
->
-> 默认端口冲突：8000，3306，6379
->
-> 建议在部署前关闭本地服务：mysql，redis...
-
 1. 进入 `docker-compose.yml` 文件所在目录，创建环境变量文件 `.env`
 
-    ```shell
-    cd deploy/docker-compose/
+   ```shell
+   cd deploy/docker-compose/
    
-    cp .env.server ../../../backend/.env
-    ```
+   cp .env.server ../../../backend/.env
+   ```
 
 2. 执行一键启动命令
 
-    ```shell
-    docker-compose up -d --build
-    ```
+   ```shell
+   docker-compose up -d --build
+   ```
 
 3. 等待命令自动完成
 4. 浏览器访问：http://127.0.0.1:8000/api/v1/docs
-
-## 互动
-
-[WeChat / QQ](https://github.com/wu-clan)
 
 ## 赞助
 

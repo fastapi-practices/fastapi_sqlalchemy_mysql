@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import math
-from typing import TypeVar, Generic, Sequence, TYPE_CHECKING
 
-from fastapi import Query, Depends
+from typing import TYPE_CHECKING, Generic, Sequence, TypeVar
+
+from fastapi import Depends, Query
 from fastapi_pagination import pagination_ctx
 from fastapi_pagination.bases import AbstractPage, AbstractParams, RawParams
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -76,7 +77,7 @@ async def paging_data(db: AsyncSession, select: Select, page_data_schema: Schema
     :return:
     """
     _paginate = await paginate(db, select)
-    page_data = _PageData[_Page[page_data_schema]](page_data=_paginate).dict()['page_data']
+    page_data = _PageData[_Page[page_data_schema]](page_data=_paginate).model_dump()['page_data']
     return page_data
 
 

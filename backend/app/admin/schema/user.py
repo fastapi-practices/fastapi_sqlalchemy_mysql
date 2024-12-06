@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from email_validator import validate_email, EmailNotValidError
-from pydantic import Field, EmailStr, field_validator, ConfigDict, UUID4, HttpUrl
+from pydantic import Field, EmailStr, ConfigDict, UUID4, HttpUrl
 
-from backend.common.schema import SchemaBase
+from backend.common.schema import SchemaBase, CustomPhoneNumber
 
 
 class Auth(SchemaBase):
@@ -18,31 +17,13 @@ class Auth2(Auth):
 
 
 class CreateUser(Auth):
-    email: str = Field(..., example='user@example.com')
-
-    @field_validator('email')
-    @classmethod
-    def email_validate(cls, v: str):
-        try:
-            validate_email(v, check_deliverability=False).email
-        except EmailNotValidError:
-            raise ValueError('邮箱格式错误')
-        return v
+    email: EmailStr = Field(examples=['user@example.com'])
 
 
 class UpdateUser(SchemaBase):
     username: str
-    email: str
-    phone: str | None = None
-
-    @field_validator('email')
-    @classmethod
-    def email_validate(cls, v: str):
-        try:
-            validate_email(v, check_deliverability=False).email
-        except EmailNotValidError:
-            raise ValueError('邮箱格式错误')
-        return v
+    email: EmailStr = Field(examples=['user@example.com'])
+    phone: CustomPhoneNumber | None = None
 
 
 class Avatar(SchemaBase):
@@ -54,17 +35,15 @@ class GetUserInfo(UpdateUser):
 
     id: int
     uuid: UUID4
-    username: str
-    email: EmailStr
     status: int
     is_superuser: bool
     avatar: str | None = None
-    phone: str | None = None
     join_time: datetime.datetime
     last_login_time: datetime.datetime | None = None
 
 
 class ResetPassword(SchemaBase):
     username: str
+    old_password: str
     new_password: str
     confirm_password: str

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from redis.asyncio.client import Redis
-from redis.exceptions import TimeoutError, AuthenticationError
+from redis.asyncio import Redis
+from redis.exceptions import AuthenticationError, TimeoutError
 
 from backend.common.log import log
 from backend.core.conf import settings
@@ -38,6 +38,27 @@ class RedisCli(Redis):
             log.error('❌ 数据库 redis 连接异常 {}', e)
             sys.exit()
 
+    async def delete_prefix(self, prefix: str, exclude: str | list = None):
+        """
+        删除指定前缀的所有key
 
-# 创建redis连接对象
-redis_client = RedisCli()
+        :param prefix:
+        :param exclude:
+        :return:
+        """
+        keys = []
+        async for key in self.scan_iter(match=f'{prefix}*'):
+            if isinstance(exclude, str):
+                if key != exclude:
+                    keys.append(key)
+            elif isinstance(exclude, list):
+                if key not in exclude:
+                    keys.append(key)
+            else:
+                keys.append(key)
+        if keys:
+            await self.delete(*keys)
+
+
+# 创建 redis 客户端单例
+redis_client: RedisCli = RedisCli()

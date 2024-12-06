@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import sys
+
+from typing import Annotated
 from uuid import uuid4
 
 from fastapi import Depends
 from sqlalchemy import URL
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from typing_extensions import Annotated
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from backend.common.log import log
 from backend.common.model import MappedBase
