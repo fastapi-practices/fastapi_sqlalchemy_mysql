@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from sqlalchemy import String
+from sqlalchemy import String, VARBINARY
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.common.model import DataClassBase, id_key
@@ -19,6 +19,7 @@ class User(DataClassBase):
     uuid: Mapped[str] = mapped_column(String(50), init=False, default_factory=uuid4_str, unique=True)
     username: Mapped[str] = mapped_column(String(20), unique=True, index=True, comment='用户名')
     password: Mapped[str] = mapped_column(String(255), comment='密码')
+    salt: Mapped[bytes | None] = mapped_column(VARBINARY(255), comment='加密盐')
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True, comment='邮箱')
     status: Mapped[int] = mapped_column(default=1, comment='用户账号状态(0停用 1正常)')
     is_superuser: Mapped[bool] = mapped_column(default=False, comment='超级权限(0否 1是)')

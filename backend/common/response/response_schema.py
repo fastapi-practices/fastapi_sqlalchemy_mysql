@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from typing import Any
 
-from asgiref.sync import sync_to_async
-from pydantic import BaseModel
+from fastapi import Response
+from pydantic import BaseModel, ConfigDict
+
+from backend.common.response.response_code import CustomResponse, CustomResponseCode
+from backend.core.conf import settings
+from backend.utils.serializers import MsgSpecJSONResponse
 
 _ExcludeData = set[int | str] | dict[int | str, Any]
 
@@ -13,10 +18,6 @@ __all__ = ['ResponseModel', 'response_base']
 class ResponseModel(BaseModel):
     """
     统一返回模型
-
-    .. tip::
-
-        如果你不想使用 ResponseBase 中的自定义编码器，可以使用此模型，返回数据将通过 fastapi 内部的编码器直接自动解析并返回
 
     E.g. ::
 
@@ -28,12 +29,19 @@ class ResponseModel(BaseModel):
         @router.get('/test')
         def test() -> ResponseModel:
             return ResponseModel(data={'test': 'test'})
-    """  # noqa: E501
 
-    # model_config = ConfigDict(json_encoders={datetime: lambda x: x.strftime(settings.DATETIME_FORMAT)})
 
-    code: int = 200
-    msg: str = 'Success'
+        @router.get('/test')
+        def test() -> ResponseModel:
+            res = CustomResponseCode.HTTP_200
+            return ResponseModel(code=res.code, msg=res.msg, data={'test': 'test'})
+    """
+
+    # TODO: json_encoders 配置失效: https://github.com/tiangolo/fastapi/discussions/10252
+    model_config = ConfigDict(json_encoders={datetime: lambda x: x.strftime(settings.DATETIME_FORMAT)})
+
+    code: int = CustomResponseCode.HTTP_200.code
+    msg: str = CustomResponseCode.HTTP_200.msg
     data: Any | None = None
 
 
@@ -43,33 +51,60 @@ class ResponseBase:
 
     .. tip::
 
-        此类中的返回方法将通过自定义编码器预解析，然后由 fastapi 内部的编码器再次处理并返回，可能存在性能损耗，取决于个人喜好
+        此类中的方法将返回 ResponseModel 模型，作为一种编码风格而存在；
 
     E.g. ::
 
         @router.get('/test')
-        def test():
-            return await response_base.success(data={'test': 'test'})
-    """  # noqa: E501
+        def test() -> ResponseModel:
+            return response_base.success(data={'test': 'test'})
+    """
 
     @staticmethod
-    @sync_to_async
-    def __response(code: int, msg: str, data: Any | None = None) -> ResponseModel:
-        return ResponseModel(code=code, msg=msg, data=data)
-
-    async def success(self, *, code: int = 200, msg: str = 'Success', data: Any | None = None) -> dict:
+    def __response(*, res: CustomResponseCode | CustomResponse = None, data: Any | None = None) -> ResponseModel:
         """
         请求成功返回通用方法
 
-        :param code: 返回状态码
-        :param msg: 返回信息
+        :param res: 返回信息
         :param data: 返回数据
         :return:
         """
-        return await self.__response(code=code, msg=msg, data=data)
+        return ResponseModel(code=res.code, msg=res.msg, data=data)
 
-    async def fail(self, *, code: int = 400, msg: str = 'Bad Request', data: Any = None) -> dict:
-        return await self.__response(code=code, msg=msg, data=data)
+    def success(
+        self,
+        *,
+        res: CustomResponseCode | CustomResponse = CustomResponseCode.HTTP_200,
+        data: Any | None = None,
+    ) -> ResponseModel:
+        return self.__response(res=res, data=data)
+
+    def fail(
+        self,
+        *,
+        res: CustomResponseCode | CustomResponse = CustomResponseCode.HTTP_400,
+        data: Any = None,
+    ) -> ResponseModel:
+        return self.__response(res=res, data=data)
+
+    @staticmethod
+    def fast_success(
+        *,
+        res: CustomResponseCode | CustomResponse = CustomResponseCode.HTTP_200,
+        data: Any | None = None,
+    ) -> Response:
+        """
+        此方法是为了提高接口响应速度而创建的，如果返回数据无需进行 pydantic 解析和验证，则推荐使用，相反，请不要使用！
+
+        .. warning::
+
+            使用此返回方法时，不要指定接口参数 response_model，也不要在接口函数后添加箭头返回类型
+
+        :param res:
+        :param data:
+        :return:
+        """
+        return MsgSpecJSONResponse({'code': res.code, 'msg': res.msg, 'data': data})
 
 
-response_base = ResponseBase()
+response_base: ResponseBase = ResponseBase()

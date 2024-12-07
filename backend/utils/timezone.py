@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import zoneinfo
+
 from datetime import datetime
+from datetime import timezone as datetime_timezone
 
 from backend.core.conf import settings
 
@@ -37,5 +39,15 @@ class TimeZone:
         """
         return datetime.strptime(date_str, format_str).replace(tzinfo=self.tz_info)
 
+    @staticmethod
+    def f_utc(dt: datetime) -> datetime:
+        """
+        时区时间转 UTC（GMT）时区
 
-timezone = TimeZone()
+        :param dt:
+        :return:
+        """
+        return dt.astimezone(datetime_timezone.utc)
+
+
+timezone: TimeZone = TimeZone()
