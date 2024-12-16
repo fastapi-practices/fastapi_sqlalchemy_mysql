@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     FASTAPI_DOCS_URL: str | None = f'{FASTAPI_API_V1_PATH}/docs'
     FASTAPI_REDOCS_URL: str | None = f'{FASTAPI_API_V1_PATH}/redocs'
     FASTAPI_OPENAPI_URL: str | None = f'{FASTAPI_API_V1_PATH}/openapi'
-    FASTAPI_STATIC_FILES: bool = True
+    FASTAPI_STATIC_FILES: bool = False
 
     @model_validator(mode='before')
     @classmethod

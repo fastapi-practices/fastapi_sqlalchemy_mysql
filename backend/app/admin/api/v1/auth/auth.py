@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from backend.app.admin.service.auth_service import auth_service
 from backend.common.security.jwt import DependsJwtAuth
 from backend.common.response.response_schema import response_base, ResponseModel
-from backend.app.admin.schema.token import GetSwaggerToken, GetLoginToken
+from backend.app.admin.schema.token import GetSwaggerToken
 from backend.app.admin.schema.user import Auth2
 
 router = APIRouter()
