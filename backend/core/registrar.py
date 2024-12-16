@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os.path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends
@@ -93,6 +94,9 @@ def register_static_file(app: FastAPI):
     """
     if settings.FASTAPI_STATIC_FILES:
         from fastapi.staticfiles import StaticFiles
+
+        if not os.path.exists(STATIC_DIR):
+            os.makedirs(STATIC_DIR)
 
         app.mount('/static', StaticFiles(directory=STATIC_DIR), name='static')
 
