@@ -7,7 +7,7 @@ from fastapi import APIRouter, Query
 from backend.common.security.jwt import CurrentUser, DependsJwtAuth
 from backend.common.pagination import paging_data, DependsPagination
 from backend.common.response.response_schema import response_base, ResponseModel
-from backend.database.db_mysql import CurrentSession
+from backend.database.db import CurrentSession
 from backend.app.admin.schema.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser, Avatar
 from backend.app.admin.service.user_service import UserService
 from backend.utils.serializers import select_as_dict

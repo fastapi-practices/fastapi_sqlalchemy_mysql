@@ -37,7 +37,7 @@ target_metadata = [
 ]
 
 # other values from the config, defined by the needs of env.py,
-from backend.database.db_mysql import SQLALCHEMY_DATABASE_URL
+from backend.database.db import SQLALCHEMY_DATABASE_URL
 
 config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL)
 

@@ -11,8 +11,8 @@ from backend.common.exception import errors
 from backend.common.response.response_code import CustomErrorCode
 from backend.common.security.jwt import password_verify, create_access_token
 from backend.core.conf import settings
-from backend.database.db_mysql import async_db_session
-from backend.database.db_redis import redis_client
+from backend.database.db import async_db_session
+from backend.database.redis import redis_client
 from backend.utils.timezone import timezone
 
 

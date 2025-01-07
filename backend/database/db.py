@@ -17,7 +17,7 @@ from backend.core.conf import settings
 def create_engine_and_session(url: str | URL):
     try:
         # 数据库引擎
-        engine = create_async_engine(url, echo=settings.MYSQL_ECHO, future=True, pool_pre_ping=True)
+        engine = create_async_engine(url, echo=settings.DATABASE_ECHO, future=True, pool_pre_ping=True)
         # log.success('数据库连接成功')
     except Exception as e:
         log.error('❌ 数据库链接失败 {}', e)
@@ -28,8 +28,8 @@ def create_engine_and_session(url: str | URL):
 
 
 SQLALCHEMY_DATABASE_URL = (
-    f'mysql+asyncmy://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_HOST}:'
-    f'{settings.MYSQL_PORT}/{settings.MYSQL_DATABASE}?charset={settings.MYSQL_CHARSET}'
+    f'mysql+asyncmy://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:'
+    f'{settings.DATABASE_PORT}/{settings.DATABASE_SCHEMA}?charset={settings.DATABASE_CHARSET}'
 )
 
 async_engine, async_db_session = create_engine_and_session(SQLALCHEMY_DATABASE_URL)

@@ -11,7 +11,7 @@ from typing_extensions import Annotated
 
 from backend.common.exception.errors import TokenError, AuthorizationError
 from backend.core.conf import settings
-from backend.database.db_mysql import CurrentSession
+from backend.database.db import CurrentSession
 from backend.app.admin.model.user import User
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL_SWAGGER)
