@@ -15,11 +15,11 @@ class Settings(BaseSettings):
     # Env Config
     ENVIRONMENT: Literal['dev', 'pro']
 
-    # Env MySQL
-    MYSQL_HOST: str
-    MYSQL_PORT: int
-    MYSQL_USER: str
-    MYSQL_PASSWORD: str
+    # Env Database
+    DATABASE_HOST: str
+    DATABASE_PORT: int
+    DATABASE_USER: str
+    DATABASE_PASSWORD: str
 
     # Env Redis
     REDIS_HOST: str
@@ -49,9 +49,9 @@ class Settings(BaseSettings):
         return values
 
     # MYSQL
-    MYSQL_ECHO: bool = False
-    MYSQL_DATABASE: str = 'fsm'
-    MYSQL_CHARSET: str = 'utf8mb4'
+    DATABASE_ECHO: bool = False
+    DATABASE_DATABASE: str = 'fsm'
+    DATABASE_CHARSET: str = 'utf8mb4'
 
     # Redis
     REDIS_TIMEOUT: int = 10
