@@ -5,7 +5,7 @@ from sqlalchemy import Select
 from backend.common.exception import errors
 from backend.common.security.jwt import superuser_verify, password_verify, get_hash_password
 from backend.app.admin.crud.crud_user import user_dao
-from backend.database.db_mysql import async_db_session
+from backend.database.db import async_db_session
 from backend.app.admin.model import User
 from backend.app.admin.schema.user import CreateUser, ResetPassword, UpdateUser, Avatar
 

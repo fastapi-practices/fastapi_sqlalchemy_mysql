@@ -6,7 +6,7 @@ from sqlalchemy import String, VARBINARY
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.common.model import DataClassBase, id_key
-from backend.database.db_mysql import uuid4_str
+from backend.database.db import uuid4_str
 from backend.utils.timezone import timezone
 
 

@@ -29,7 +29,7 @@ def create_engine_and_session(url: str | URL):
 
 SQLALCHEMY_DATABASE_URL = (
     f'mysql+asyncmy://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:'
-    f'{settings.DATABASE_PORT}/{settings.DATABASE_DATABASE}?charset={settings.DATABASE_CHARSET}'
+    f'{settings.DATABASE_PORT}/{settings.DATABASE_SCHEMA}?charset={settings.DATABASE_CHARSET}'
 )
 
 async_engine, async_db_session = create_engine_and_session(SQLALCHEMY_DATABASE_URL)

@@ -50,7 +50,7 @@ class Settings(BaseSettings):
 
     # MYSQL
     DATABASE_ECHO: bool = False
-    DATABASE_DATABASE: str = 'fsm'
+    DATABASE_SCHEMA: str = 'fsm'
     DATABASE_CHARSET: str = 'utf8mb4'
 
     # Redis

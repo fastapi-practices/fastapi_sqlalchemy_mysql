@@ -11,9 +11,9 @@ from backend.app.router import route
 from backend.common.exception.exception_handler import register_exception
 from backend.common.log import setup_logging, set_customize_logfile
 from backend.core.path_conf import STATIC_DIR
-from backend.database.db_redis import redis_client
+from backend.database.redis import redis_client
 from backend.core.conf import settings
-from backend.database.db_mysql import create_table
+from backend.database.db import create_table
 from backend.utils.demo_site import demo_site
 from backend.utils.health_check import http_limit_callback, ensure_unique_route_names
 from backend.utils.openapi import simplify_operation_ids
