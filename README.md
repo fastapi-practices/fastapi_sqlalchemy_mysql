@@ -59,17 +59,17 @@
    ```shell
    cd deploy/docker-compose/
    
-   cp .env.server ../../../backend/.env
+   cp .env.server ../../backend/.env
    ```
 
 2. 执行一键启动命令
 
    ```shell
-   docker-compose up -d --build
+   sudo docker-compose up -d --build
    ```
 
 3. 等待命令自动完成
-4. 浏览器访问：http://127.0.0.1:8000/docs
+4. 浏览器访问：http://127.0.0.1:8000/api/v1/docs
 
 ## 赞助
 

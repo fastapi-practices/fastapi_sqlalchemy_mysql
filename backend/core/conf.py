@@ -10,7 +10,7 @@ from backend.core.path_conf import BasePath
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=f'{BasePath}/.env', env_file_encoding='utf-8', case_sensitive=True)
+    model_config = SettingsConfigDict(env_file=f'{BasePath}/.env', env_file_encoding='utf-8', extra='ignore')
 
     # Env Config
     ENVIRONMENT: Literal['dev', 'pro']
@@ -35,9 +35,9 @@ class Settings(BaseSettings):
     FASTAPI_TITLE: str = 'FastAPI'
     FASTAPI_VERSION: str = '0.0.1'
     FASTAPI_DESCRIPTION: str = 'FastAPI Best Architecture'
-    FASTAPI_DOCS_URL: str | None = '/docs'
-    FASTAPI_REDOCS_URL: str | None = '/redocs'
-    FASTAPI_OPENAPI_URL: str | None = '/openapi'
+    FASTAPI_DOCS_URL: str | None = f'{FASTAPI_API_V1_PATH}/docs'
+    FASTAPI_REDOCS_URL: str | None = f'{FASTAPI_API_V1_PATH}/redocs'
+    FASTAPI_OPENAPI_URL: str | None = f'{FASTAPI_API_V1_PATH}/openapi'
     FASTAPI_STATIC_FILES: bool = False
 
     @model_validator(mode='before')
