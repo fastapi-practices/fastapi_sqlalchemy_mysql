@@ -60,7 +60,7 @@ pydantic-settings==2.6.1
 pygments==2.18.0
 python-dotenv==1.0.1
 python-jose==3.3.0
-python-multipart==0.0.9
+python-multipart==0.0.18
 pyyaml==6.0.2
 redis[hiredis]==5.0.4
 rich==13.9.4
