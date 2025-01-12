@@ -3,6 +3,7 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
+    image: fsm_server:latest
     container_name: fsm_server
     restart: always
     depends_on:
