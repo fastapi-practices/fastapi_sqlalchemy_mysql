@@ -48,7 +48,7 @@
    fastapi dev main.py
    ```
 
-9. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
+9. 浏览器访问: http://127.0.0.1:8000/docs
 
 ---
 
@@ -59,12 +59,13 @@
    ```shell
    cd deploy/docker-compose/
    
-   cp .env.server ../../../backend/.env
+   cp .env.server ../../backend/.env
    ```
 
 2. 执行一键启动命令
 
    ```shell
+   # 根据情况使用 sudo
    docker-compose up -d --build
    ```
 

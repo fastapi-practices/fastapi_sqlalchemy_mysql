@@ -10,7 +10,7 @@ from backend.core.path_conf import BasePath
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=f'{BasePath}/.env', env_file_encoding='utf-8', case_sensitive=True)
+    model_config = SettingsConfigDict(env_file=f'{BasePath}/.env', env_file_encoding='utf-8', extra='ignore')
 
     # Env Config
     ENVIRONMENT: Literal['dev', 'pro']

@@ -1,19 +1,9 @@
-version: "3.10"
-
-networks:
-  fsm_network:
-    driver: bridge
-
-volumes:
-  fsm_mysql:
-  fsm_redis:
-  fsm_static:
-
 services:
   fsm_server:
     build:
       context: ../../
       dockerfile: Dockerfile
+    image: fsm_server:latest
     container_name: fsm_server
     restart: always
     depends_on:
@@ -27,8 +17,9 @@ services:
       - bash
       - -c
       - |
-        wait-for-it -s mysql:3306 -s redis:6379 -t 300
-        supervisord -c /fsm/deploy/supervisor.conf
+        wait-for-it -s fsm_mysql:3306 -s fsm_redis:6379 -t 300
+        supervisord -c /etc/supervisor/supervisord.conf
+        supervisorctl restart
 
   fsm_mysql:
     image: mysql:8.0.29
@@ -41,7 +32,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       TZ: Asia/Shanghai
     volumes:
-      - fba_mysql:/var/lib/mysql
+      - fsm_mysql:/var/lib/mysql
     networks:
       - fsm_network
     command:
@@ -64,13 +55,32 @@ services:
       - fsm_network
 
   fsm_nginx:
-    image: nginx
+    image: nginx:stable
     ports:
       - "8000:80"
     container_name: fsm_nginx
     restart: always
+    depends_on:
+      - fsm_server
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - fsm_static:/www/fsm/backend/static
+      - ../nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - fsm_static:/www/fsm_server/backend/static
     networks:
       - fsm_network
+
+networks:
+  fsm_network:
+    name: fsm_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.10.10.0/24
+
+volumes:
+  fsm_mysql:
+    name: fsm_mysql
+  fsm_redis:
+    name: fsm_redis
+  fsm_static:
+    name: fsm_static

@@ -1,3 +1,4 @@
+# fmt: off
 # 监听内网端口
 bind = '0.0.0.0:8001'
 
@@ -5,7 +6,7 @@ bind = '0.0.0.0:8001'
 chdir = '/fsm/backend/'
 
 # 并行工作进程数
-workers = 4
+workers = 1
 
 # 指定每个工作者的线程数
 threads = 4
@@ -41,6 +42,6 @@ capture_output = True
 loglevel = 'debug'
 
 # python程序
-pythonpath = '/usr/local/lib/python3.8/site-packages'
+pythonpath = '/usr/local/lib/python3.10/site-packages'
 
 # 启动 gunicorn -c gunicorn.conf.py main:app
