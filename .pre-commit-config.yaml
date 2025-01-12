@@ -26,5 +26,7 @@ repos:
           - '-o'
           - 'requirements.txt'
           - '--without-hashes'
+          - '-G'
+          - 'lint'
         files: ^pdm.lock$
       - id: pdm-lock-check
