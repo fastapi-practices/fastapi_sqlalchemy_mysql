@@ -69,6 +69,7 @@ services:
 
 networks:
   fsm_network:
+    name: fsm_network
     driver: bridge
     ipam:
       driver: default
@@ -77,5 +78,8 @@ networks:
 
 volumes:
   fsm_mysql:
+    name: fsm_mysql
   fsm_redis:
+    name: fsm_redis
   fsm_static:
+    name: fsm_static
