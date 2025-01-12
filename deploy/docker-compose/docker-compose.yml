@@ -62,7 +62,7 @@ services:
     depends_on:
       - fsm_server
     volumes:
-      - ../nginx.conf:/etc/nginx/sites-enabled/default.conf:ro
+      - ../nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - fsm_static:/www/fsm_server/backend/static
     networks:
       - fsm_network

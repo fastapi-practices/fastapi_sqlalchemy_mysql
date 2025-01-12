@@ -29,7 +29,7 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 worker_connections = 2000
 
 # 设置进程文件目录
-pidfile = '/fsa/gunicorn.pid'
+pidfile = '/fsm/gunicorn.pid'
 
 # 设置访问日志和错误信息日志路径
 accesslog = '/var/log/fastapi_server/gunicorn_access.log'
