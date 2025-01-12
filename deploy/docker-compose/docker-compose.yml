@@ -18,7 +18,7 @@ services:
       - |
         wait-for-it -s fsm_mysql:3306 -s fsm_redis:6379 -t 300
         supervisord -c /etc/supervisor/supervisord.conf
-        supervisorctl restart fastapi_server
+        supervisorctl restart
 
   fsm_mysql:
     image: mysql:8.0.29
@@ -62,14 +62,18 @@ services:
     depends_on:
       - fsm_server
     volumes:
-      - ../nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - fsm_static:/www/fsm/backend/static
+      - ../nginx.conf:/etc/nginx/sites-enabled/default.conf:ro
+      - fsm_static:/www/fsm_server/backend/static
     networks:
       - fsm_network
 
 networks:
   fsm_network:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.10.10.0/24
 
 volumes:
   fsm_mysql:

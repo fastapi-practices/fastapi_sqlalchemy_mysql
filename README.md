@@ -48,7 +48,7 @@
    fastapi dev main.py
    ```
 
-9. 浏览器访问: http://127.0.0.1:8000/api/v1/docs
+9. 浏览器访问: http://127.0.0.1:8000/docs
 
 ---
 
@@ -65,11 +65,12 @@
 2. 执行一键启动命令
 
    ```shell
-   sudo docker-compose up -d --build
+   # 根据情况使用 sudo
+   docker-compose up -d --build
    ```
 
 3. 等待命令自动完成
-4. 浏览器访问：http://127.0.0.1:8000/api/v1/docs
+4. 浏览器访问：http://127.0.0.1:8000/docs
 
 ## 赞助
 

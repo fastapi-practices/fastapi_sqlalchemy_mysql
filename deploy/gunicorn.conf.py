@@ -1,3 +1,4 @@
+# fmt: off
 # 监听内网端口
 bind = '0.0.0.0:8001'
 
@@ -28,7 +29,7 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 worker_connections = 2000
 
 # 设置进程文件目录
-pidfile = '/fsm/gunicorn.pid'
+pidfile = '/fsa/gunicorn.pid'
 
 # 设置访问日志和错误信息日志路径
 accesslog = '/var/log/fastapi_server/gunicorn_access.log'
