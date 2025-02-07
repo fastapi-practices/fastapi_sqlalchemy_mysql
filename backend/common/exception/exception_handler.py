@@ -77,7 +77,6 @@ async def _validation_exception_handler(request: Request, e: RequestValidationEr
         'msg': msg,
         'data': data,
     }
-    request.state.__request_validation_exception__ = content  # 用于在中间件中获取异常信息
     return MsgSpecJSONResponse(status_code=422, content=content)
 
 
@@ -100,7 +99,6 @@ def register_exception(app: FastAPI):
         else:
             res = response_base.fail(res=CustomResponseCode.HTTP_400)
             content = res.model_dump()
-        request.state.__request_http_exception__ = content
         return MsgSpecJSONResponse(
             status_code=_get_exception_code(exc.status_code),
             content=content,
@@ -143,7 +141,6 @@ def register_exception(app: FastAPI):
             'msg': CUSTOM_USAGE_ERROR_MESSAGES.get(exc.code),
             'data': None,
         }
-        request.state.__request_pydantic_user_error__ = content
         return MsgSpecJSONResponse(
             status_code=StandardResponseCode.HTTP_500,
             content=content,
@@ -167,7 +164,6 @@ def register_exception(app: FastAPI):
         else:
             res = response_base.fail(res=CustomResponseCode.HTTP_500)
             content = res.model_dump()
-        request.state.__request_assertion_error__ = content
         return MsgSpecJSONResponse(
             status_code=StandardResponseCode.HTTP_500,
             content=content,
@@ -187,7 +183,6 @@ def register_exception(app: FastAPI):
             'msg': str(exc.msg),
             'data': exc.data if exc.data else None,
         }
-        request.state.__request_custom_exception__ = content
         return MsgSpecJSONResponse(
             status_code=_get_exception_code(exc.code),
             content=content,
@@ -212,7 +207,6 @@ def register_exception(app: FastAPI):
         else:
             res = response_base.fail(res=CustomResponseCode.HTTP_500)
             content = res.model_dump()
-        request.state.__request_all_unknown_exception__ = content
         return MsgSpecJSONResponse(
             status_code=StandardResponseCode.HTTP_500,
             content=content,
@@ -248,7 +242,6 @@ def register_exception(app: FastAPI):
                 else:
                     res = response_base.fail(res=CustomResponseCode.HTTP_500)
                     content = res.model_dump()
-            request.state.__request_cors_500_exception__ = content
             response = MsgSpecJSONResponse(
                 status_code=exc.code if isinstance(exc, BaseExceptionMixin) else StandardResponseCode.HTTP_500,
                 content=content,
