@@ -15,7 +15,7 @@ select = [
     "RUF100",
     "I002",
     "F404",
-    "TCH",
+    "TC",
     "UP007"
 ]
 preview = true
@@ -25,8 +25,8 @@ lines-between-types = 1
 order-by-type = true
 
 [lint.per-file-ignores]
-"**/api/v1/*.py" = ["TCH"]
-"**/model/*.py" = ["TCH003"]
+"**/api/v1/*.py" = ["TC"]
+"**/model/*.py" = ["TC003"]
 "**/model/__init__.py" = ["F401"]
 
 [format]

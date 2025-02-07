@@ -58,7 +58,7 @@ class Settings(BaseSettings):
 
     # Captcha
     CAPTCHA_LOGIN_REDIS_PREFIX: str = 'fba:login:captcha'
-    CAPTCHA_EXPIRATION_TIME: int = 60 * 5  # 过期时间，单位：秒
+    CAPTCHA_LOGIN_EXPIRE_SECONDS: int = 60 * 5  # 过期时间，单位：秒
 
     # Token
     TOKEN_ALGORITHM: str = 'HS256'  # 算法

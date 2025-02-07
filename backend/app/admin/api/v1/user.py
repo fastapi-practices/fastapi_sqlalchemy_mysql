@@ -5,8 +5,8 @@ from typing import Annotated
 from fastapi import APIRouter, Query
 
 from backend.common.security.jwt import CurrentUser, DependsJwtAuth
-from backend.common.pagination import paging_data, DependsPagination
-from backend.common.response.response_schema import response_base, ResponseModel
+from backend.common.pagination import paging_data, DependsPagination, PageData
+from backend.common.response.response_schema import response_base, ResponseModel, ResponseSchemaModel
 from backend.database.db import CurrentSession
 from backend.app.admin.schema.user import CreateUser, GetUserInfo, ResetPassword, UpdateUser, Avatar
 from backend.app.admin.service.user_service import UserService
@@ -30,7 +30,7 @@ async def password_reset(obj: ResetPassword) -> ResponseModel:
 
 
 @router.get('/{username}', summary='查看用户信息', dependencies=[DependsJwtAuth])
-async def get_user(username: str) -> ResponseModel:
+async def get_user(username: str) -> ResponseSchemaModel[GetUserInfo]:
     current_user = await UserService.get_userinfo(username=username)
     data = GetUserInfo(**select_as_dict(current_user))
     return response_base.success(data=data)
@@ -52,15 +52,22 @@ async def update_avatar(username: str, avatar: Avatar) -> ResponseModel:
     return response_base.fail()
 
 
-@router.get('', summary='（模糊条件）分页获取所有用户', dependencies=[DependsJwtAuth, DependsPagination])
+@router.get(
+    '',
+    summary='（模糊条件）分页获取所有用户',
+    dependencies=[
+        DependsJwtAuth,
+        DependsPagination,
+    ],
+)
 async def get_all_users(
     db: CurrentSession,
     username: Annotated[str | None, Query()] = None,
     phone: Annotated[str | None, Query()] = None,
     status: Annotated[int | None, Query()] = None,
-) -> ResponseModel:
+) -> ResponseSchemaModel[PageData[GetUserInfo]]:
     user_select = await UserService.get_select(username=username, phone=phone, status=status)
-    page_data = await paging_data(db, user_select, GetUserInfo)
+    page_data = await paging_data(db, user_select)
     return response_base.success(data=page_data)
 
 
