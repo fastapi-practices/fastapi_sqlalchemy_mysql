@@ -32,7 +32,7 @@ class AuthService:
     async def swagger_login(self, *, form_data: OAuth2PasswordRequestForm) -> tuple[str, User]:
         async with async_db_session() as db:
             user = await self.user_verify(form_data.username, form_data.password)
-            await user_dao.update_user_login_time(db, user.username, login_time=timezone.now())
+            await user_dao.update_login_time(db, user.username, login_time=timezone.now())
             token = create_access_token(str(user.id))
             return token, user
 
@@ -48,7 +48,7 @@ class AuthService:
                 raise errors.ForbiddenError(msg='验证码失效，请重新获取')
             if redis_code.lower() != obj.captcha.lower():
                 raise errors.CustomError(error=CustomErrorCode.CAPTCHA_ERROR)
-            await user_dao.update_user_login_time(db, user.username, login_time=timezone.now())
+            await user_dao.update_login_time(db, user.username, login_time=timezone.now())
             token = create_access_token(str(user.id))
             data = GetLoginToken(access_token=token, user=user)
             return data
