@@ -34,7 +34,7 @@ class CRUDUser(CRUDPlus[User]):
         """
         return await self.select_model_by_column(db, username=username)
 
-    async def update_user_login_time(self, db: AsyncSession, username: str, login_time: datetime) -> int:
+    async def update_login_time(self, db: AsyncSession, username: str, login_time: datetime) -> int:
         user = await db.execute(
             update(self.model).where(self.model.username == username).values(last_login_time=login_time)
         )

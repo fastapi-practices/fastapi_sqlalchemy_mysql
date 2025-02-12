@@ -23,7 +23,6 @@ dependencies = [
     "redis[hiredis]==5.0.4",
     "SQLAlchemy==2.0.30",
     "tzdata==2024.1",
-    "uvicorn[standard]==0.29.0",
     "sqlalchemy-crud-plus>=1.6.0",
     "pwdlib>=0.2.1",
     "msgspec>=0.18.6",
