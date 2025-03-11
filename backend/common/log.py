@@ -3,8 +3,8 @@
 import inspect
 import logging
 import os
+import sys
 
-from sys import stderr, stdout
 
 from loguru import logger
 
@@ -41,7 +41,7 @@ def setup_logging():
     """
     # Intercept everything at the root logger
     logging.root.handlers = [InterceptHandler()]
-    logging.root.setLevel(settings.LOG_ROOT_LEVEL)
+    logging.root.setLevel(settings.LOG_STD_LEVEL)
 
     # Remove all log handlers and propagate to root logger
     for name in logging.root.manager.loggerDict.keys():
@@ -54,62 +54,58 @@ def setup_logging():
         # Debug log handlers
         # logging.debug(f'{logging.getLogger(name)}, {logging.getLogger(name).propagate}')
 
-    # Remove every other logger's handlers
+    # Remove default loguru logger
     logger.remove()
 
-    # Configure loguru logger before starts logging
+    # Set the loguru default handlers
     logger.configure(
         handlers=[
             {
-                'sink': stdout,
-                'level': settings.LOG_STDOUT_LEVEL,
-                'filter': lambda record: record['level'].no <= 25,
+                'sink': sys.stdout,
+                'level': settings.LOG_STD_LEVEL,
                 'format': settings.LOG_STD_FORMAT,
-            },
-            {
-                'sink': stderr,
-                'level': settings.LOG_STDERR_LEVEL,
-                'filter': lambda record: record['level'].no >= 30,
-                'format': settings.LOG_STD_FORMAT,
-            },
+            }
         ]
     )
 
 
-def set_customize_logfile():
+def set_custom_logfile():
     log_path = path_conf.LOG_DIR
     if not os.path.exists(log_path):
         os.mkdir(log_path)
 
     # log files
-    log_stdout_file = os.path.join(log_path, settings.LOG_STDOUT_FILENAME)
-    log_stderr_file = os.path.join(log_path, settings.LOG_STDERR_FILENAME)
+    log_access_file = os.path.join(log_path, settings.LOG_ACCESS_FILENAME)
+    log_error_file = os.path.join(log_path, settings.LOG_ERROR_FILENAME)
 
-    # loguru logger: https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.add
+    # set loguru logger default config
+    # https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.add
     log_config = {
-        'rotation': '10 MB',
-        'retention': '15 days',
-        'compression': 'tar.gz',
-        'enqueue': True,
         'format': settings.LOG_FILE_FORMAT,
+        'enqueue': True,
+        'rotation': '5 MB',
+        'retention': '7 days',
+        'compression': 'tar.gz',
     }
 
     # stdout file
     logger.add(
-        str(log_stdout_file),
-        level=settings.LOG_STDOUT_LEVEL,
-        **log_config,
+        str(log_access_file),
+        level=settings.LOG_ACCESS_FILE_LEVEL,
+        filter=lambda record: record['level'].no <= 25,
         backtrace=False,
         diagnose=False,
+        **log_config,
     )
 
     # stderr file
     logger.add(
-        str(log_stderr_file),
-        level=settings.LOG_STDERR_LEVEL,
-        **log_config,
+        str(log_error_file),
+        level=settings.LOG_ERROR_FILE_LEVEL,
+        filter=lambda record: record['level'].no >= 30,
         backtrace=True,
         diagnose=True,
+        **log_config,
     )
 
 
