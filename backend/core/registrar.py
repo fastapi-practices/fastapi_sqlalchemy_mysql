@@ -9,7 +9,7 @@ from fastapi_pagination import add_pagination
 
 from backend.app.router import route
 from backend.common.exception.exception_handler import register_exception
-from backend.common.log import setup_logging, set_customize_logfile
+from backend.common.log import setup_logging, set_custom_logfile
 from backend.core.path_conf import STATIC_DIR
 from backend.database.redis import redis_client
 from backend.core.conf import settings
@@ -82,7 +82,7 @@ def register_logger() -> None:
     :return:
     """
     setup_logging()
-    set_customize_logfile()
+    set_custom_logfile()
 
 
 def register_static_file(app: FastAPI):

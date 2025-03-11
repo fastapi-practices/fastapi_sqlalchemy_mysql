@@ -2,35 +2,13 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "deploy", "lint"]
+groups = ["default", "lint"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:5f581f81c984441d3cdc61d2994950b5d2a35d031cccf3087a84818e888aa1bf"
+content_hash = "sha256:dab636c7318be65db3f2254b910a1c2264c93c28cef55b6e2d3aff18723685b0"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
-
-[[package]]
-name = "aiofiles"
-version = "23.2.1"
-requires_python = ">=3.7"
-summary = "File support for asyncio."
-groups = ["default"]
-files = [
-    {file = "aiofiles-23.2.1-py3-none-any.whl", hash = "sha256:19297512c647d4b27a2cf7c34caa7e405c0d60b5560618a29a9fe027b18b0107"},
-    {file = "aiofiles-23.2.1.tar.gz", hash = "sha256:84ec2218d8419404abcb9f0c02df3f34c6e0a68ed41072acfb1cef5cbc29051a"},
-]
-
-[[package]]
-name = "aiosmtplib"
-version = "3.0.1"
-requires_python = ">=3.8,<4.0"
-summary = "asyncio SMTP client"
-groups = ["default"]
-files = [
-    {file = "aiosmtplib-3.0.1-py3-none-any.whl", hash = "sha256:abcceae7e820577307b4cda2041b2c25e5121469c0e186764ddf8e15b12064cd"},
-    {file = "aiosmtplib-3.0.1.tar.gz", hash = "sha256:43580604b152152a221598be3037f0ae6359c2817187ac4433bd857bc3fc6513"},
-]
 
 [[package]]
 name = "alembic"
@@ -79,20 +57,6 @@ dependencies = [
 files = [
     {file = "anyio-4.7.0-py3-none-any.whl", hash = "sha256:ea60c3723ab42ba6fff7e8ccb0488c898ec538ff4df1f1d5e642c3601d07e352"},
     {file = "anyio-4.7.0.tar.gz", hash = "sha256:2f834749c602966b7d456a7567cafcb309f96482b5081d14ac93ccd457f9dd48"},
-]
-
-[[package]]
-name = "asgiref"
-version = "3.8.1"
-requires_python = ">=3.8"
-summary = "ASGI specs, helper code, and adapters"
-groups = ["default"]
-dependencies = [
-    "typing-extensions>=4; python_version < \"3.11\"",
-]
-files = [
-    {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
-    {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
 ]
 
 [[package]]
@@ -256,7 +220,7 @@ name = "click"
 version = "8.1.7"
 requires_python = ">=3.7"
 summary = "Composable command line interface toolkit"
-groups = ["default", "deploy"]
+groups = ["default"]
 dependencies = [
     "colorama; platform_system == \"Windows\"",
     "importlib-metadata; python_version < \"3.8\"",
@@ -271,7 +235,7 @@ name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 summary = "Cross-platform colored terminal text."
-groups = ["default", "deploy"]
+groups = ["default"]
 marker = "sys_platform == \"win32\" or platform_system == \"Windows\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
@@ -1420,17 +1384,6 @@ files = [
 ]
 
 [[package]]
-name = "setuptools"
-version = "75.6.0"
-requires_python = ">=3.9"
-summary = "Easily download, build, install, upgrade, and uninstall Python packages"
-groups = ["deploy"]
-files = [
-    {file = "setuptools-75.6.0-py3-none-any.whl", hash = "sha256:ce74b49e8f7110f9bf04883b730f4765b774ef3ef28f722cce7c273d253aaf7d"},
-    {file = "setuptools-75.6.0.tar.gz", hash = "sha256:8199222558df7c86216af4f84c30e9b34a61d8ba19366cc914424cdbd28252f6"},
-]
-
-[[package]]
 name = "shellingham"
 version = "1.5.4"
 requires_python = ">=3.7"
@@ -1531,19 +1484,6 @@ dependencies = [
 files = [
     {file = "starlette-0.37.2-py3-none-any.whl", hash = "sha256:6fe59f29268538e5d0d182f2791a479a0c64638e6935d1c6989e63fb2699c6ee"},
     {file = "starlette-0.37.2.tar.gz", hash = "sha256:9af890290133b79fc3db55474ade20f6220a364a0402e0b556e7cd5e1e093823"},
-]
-
-[[package]]
-name = "supervisor"
-version = "4.2.5"
-summary = "A system for controlling process state under UNIX"
-groups = ["deploy"]
-dependencies = [
-    "setuptools",
-]
-files = [
-    {file = "supervisor-4.2.5-py2.py3-none-any.whl", hash = "sha256:2ecaede32fc25af814696374b79e42644ecaba5c09494c51016ffda9602d0f08"},
-    {file = "supervisor-4.2.5.tar.gz", hash = "sha256:34761bae1a23c58192281a5115fb07fbf22c9b0133c08166beffc70fed3ebc12"},
 ]
 
 [[package]]
@@ -1729,20 +1669,6 @@ dependencies = [
 files = [
     {file = "virtualenv-20.28.0-py3-none-any.whl", hash = "sha256:23eae1b4516ecd610481eda647f3a7c09aea295055337331bb4e6892ecce47b0"},
     {file = "virtualenv-20.28.0.tar.gz", hash = "sha256:2c9c3262bb8e7b87ea801d715fae4495e6032450c71d2309be9550e7364049aa"},
-]
-
-[[package]]
-name = "wait-for-it"
-version = "2.3.0"
-requires_python = ">=3.9"
-summary = "Wait for service(s) to be available before executing a command."
-groups = ["deploy"]
-dependencies = [
-    "click",
-]
-files = [
-    {file = "wait_for_it-2.3.0-py3-none-any.whl", hash = "sha256:22ddbf08d6fe1b5f59b3807d539a932df7cab3de2823cb8b63591f81fa666c38"},
-    {file = "wait_for_it-2.3.0.tar.gz", hash = "sha256:bc6eaeb0912cf4d59c824067f36c73739bb7a6182912ec8984f2fb3447ef68c0"},
 ]
 
 [[package]]

@@ -3,6 +3,7 @@
 from datetime import datetime
 from typing import Annotated
 
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, MappedAsDataclass, declared_attr, mapped_column
 
 from backend.utils.timezone import timezone
@@ -34,10 +35,11 @@ class DateTimeMixin(MappedAsDataclass):
     )
 
 
-class MappedBase(DeclarativeBase):
+class MappedBase(AsyncAttrs, DeclarativeBase):
     """
-    声明性基类, 原始 DeclarativeBase 类, 作为所有基类或数据模型类的父类而存在
+    声明式基类, 作为所有基类或数据模型类的父类而存在
 
+    `AsyncAttrs <https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asyncio.AsyncAttrs>`__
     `DeclarativeBase <https://docs.sqlalchemy.org/en/20/orm/declarative_config.html>`__
     `mapped_column() <https://docs.sqlalchemy.org/en/20/orm/mapping_api.html#sqlalchemy.orm.mapped_column>`__
     """
