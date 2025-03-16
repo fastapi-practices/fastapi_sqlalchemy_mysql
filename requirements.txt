@@ -56,7 +56,7 @@ pydantic-extra-types==2.10.0
 pydantic-settings==2.6.1
 pygments==2.18.0
 python-dotenv==1.0.1
-python-jose==3.3.0
+python-jose==3.4.0
 python-multipart==0.0.9
 pyyaml==6.0.2
 redis[hiredis]==5.0.4
