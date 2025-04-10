@@ -7,12 +7,12 @@ from backend.common.security.jwt import superuser_verify, password_verify, get_h
 from backend.app.admin.crud.crud_user import user_dao
 from backend.database.db import async_db_session
 from backend.app.admin.model import User
-from backend.app.admin.schema.user import CreateUser, ResetPassword, UpdateUser, Avatar
+from backend.app.admin.schema.user import RegisterUserParam, ResetPassword, UpdateUserParam, AvatarParam
 
 
 class UserService:
     @staticmethod
-    async def register(*, obj: CreateUser) -> None:
+    async def register(*, obj: RegisterUserParam) -> None:
         async with async_db_session.begin() as db:
             if not obj.password:
                 raise errors.ForbiddenError(msg='密码为空')
@@ -47,7 +47,7 @@ class UserService:
             return user
 
     @staticmethod
-    async def update(*, username: str, obj: UpdateUser) -> int:
+    async def update(*, username: str, obj: UpdateUserParam) -> int:
         async with async_db_session.begin() as db:
             input_user = await user_dao.get_by_username(db, username=username)
             if not input_user:
@@ -65,7 +65,7 @@ class UserService:
             return count
 
     @staticmethod
-    async def update_avatar(*, username: str, avatar: Avatar) -> int:
+    async def update_avatar(*, username: str, avatar: AvatarParam) -> int:
         async with async_db_session.begin() as db:
             input_user = await user_dao.get_by_username(db, username)
             if not input_user:

@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from backend.common.schema import SchemaBase
-from backend.app.admin.schema.user import GetUserInfo
+from backend.app.admin.schema.user import GetUserInfoDetail
 
 
 class GetSwaggerToken(SchemaBase):
     access_token: str
     token_type: str = 'Bearer'
-    user: GetUserInfo
+    user: GetUserInfoDetail
 
 
 class GetLoginToken(GetSwaggerToken):

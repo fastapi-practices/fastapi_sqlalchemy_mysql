@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from typing import Annotated
+
 from fastapi import Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
-from jose import jwt, ExpiredSignatureError, JWTError
+from jose import ExpiredSignatureError, JWTError, jwt
 from pwdlib import PasswordHash
 from pwdlib.hashers.bcrypt import BcryptHasher
-from typing_extensions import Annotated
 
-from backend.common.exception.errors import TokenError, AuthorizationError
+from backend.app.admin.model import User
+from backend.common.exception.errors import AuthorizationError, TokenError
 from backend.core.conf import settings
 from backend.database.db import CurrentSession
-from backend.app.admin.model.user import User
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL_SWAGGER)
 
