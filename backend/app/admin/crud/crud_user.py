@@ -9,7 +9,7 @@ from sqlalchemy.sql import Select
 from sqlalchemy_crud_plus import CRUDPlus
 
 from backend.app.admin.model import User
-from backend.app.admin.schema.user import CreateUser, UpdateUser, Avatar
+from backend.app.admin.schema.user import RegisterUserParam, UpdateUserParam, AvatarParam
 from backend.common.security.jwt import get_hash_password
 
 
@@ -40,7 +40,7 @@ class CRUDUser(CRUDPlus[User]):
         )
         return user.rowcount
 
-    async def create(self, db: AsyncSession, obj: CreateUser) -> None:
+    async def create(self, db: AsyncSession, obj: RegisterUserParam) -> None:
         """
         创建用户
 
@@ -55,7 +55,7 @@ class CRUDUser(CRUDPlus[User]):
         new_user = self.model(**dict_obj)
         db.add(new_user)
 
-    async def update_userinfo(self, db: AsyncSession, input_user: int, obj: UpdateUser) -> int:
+    async def update_userinfo(self, db: AsyncSession, input_user: int, obj: UpdateUserParam) -> int:
         """
         更新用户信息
 
@@ -66,7 +66,7 @@ class CRUDUser(CRUDPlus[User]):
         """
         return await self.update_model(db, input_user, obj)
 
-    async def update_avatar(self, db: AsyncSession, input_user: int, avatar: Avatar) -> int:
+    async def update_avatar(self, db: AsyncSession, input_user: int, avatar: AvatarParam) -> int:
         """
         更新用户头像
 
@@ -118,15 +118,18 @@ class CRUDUser(CRUDPlus[User]):
         :return:
         """
         stmt = select(self.model).order_by(desc(self.model.join_time))
-        where_list = []
+
+        filters = []
         if username:
-            where_list.append(self.model.username.like(f'%{username}%'))
+            filters.append(self.model.username.like(f'%{username}%'))
         if phone:
-            where_list.append(self.model.phone.like(f'%{phone}%'))
+            filters.append(self.model.phone.like(f'%{phone}%'))
         if status is not None:
-            where_list.append(self.model.status == status)
-        if where_list:
-            stmt = stmt.where(and_(*where_list))
+            filters.append(self.model.status == status)
+
+        if filters:
+            stmt = stmt.where(and_(*filters))
+
         return stmt
 
 

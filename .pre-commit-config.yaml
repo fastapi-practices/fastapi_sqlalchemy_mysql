@@ -8,7 +8,7 @@ repos:
       - id: check-toml
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.9.5
+    rev: v0.11.4
     hooks:
       - id: ruff
         args:
@@ -18,15 +18,12 @@ repos:
           - '--unsafe-fixes'
       - id: ruff-format
 
-  - repo: https://github.com/pdm-project/pdm
-    rev: 2.22.3
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.6.14
     hooks:
-      - id: pdm-export
+      - id: uv-lock
+      - id: uv-export
         args:
           - '-o'
           - 'requirements.txt'
-          - '--without-hashes'
-          - '-G'
-          - 'lint'
-        files: ^pdm.lock$
-      - id: pdm-lock-check
+          - '--no-hashes'

@@ -16,8 +16,8 @@ sys.path.append('../')
 
 from backend.core import path_conf
 
-if not os.path.exists(path_conf.ALEMBIC_VERSIONS_DIR):
-    os.makedirs(path_conf.ALEMBIC_VERSIONS_DIR)
+if not os.path.exists(path_conf.ALEMBIC_VERSION_DIR):
+    os.makedirs(path_conf.ALEMBIC_VERSION_DIR)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,10 +30,10 @@ fileConfig(config.config_file_name)
 # add your model's MetaData object here
 # for 'autogenerate' support
 # https://alembic.sqlalchemy.org/en/latest/autogenerate.html#autogenerating-multiple-metadata-collections
-from backend.app.admin.model import MappedBase as AdminModel
+from backend.app.admin.model import MappedBase
 
 target_metadata = [
-    AdminModel.metadata,
+    MappedBase.metadata,
 ]
 
 # other values from the config, defined by the needs of env.py,

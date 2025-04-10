@@ -17,7 +17,6 @@ dependencies = [
     "fastapi-pagination==0.12.24",
     "loguru==0.7.2",
     "path==16.14.0",
-    "pre-commit==4.0.0",
     "python-jose==3.3.0",
     "python-multipart==0.0.9",
     "redis[hiredis]==5.0.4",
@@ -26,7 +25,6 @@ dependencies = [
     "sqlalchemy-crud-plus>=1.6.0",
     "pwdlib>=0.2.1",
     "msgspec>=0.18.6",
-    "phonenumbers>=8.13.51",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -34,15 +32,18 @@ license = {text = "MIT"}
 
 [dependency-groups]
 lint = [
-    "ruff>=0.8.2",
+    "pre-commit>=4.0.0",
 ]
 server = [
-    "gunicorn==21.2.0",
+    "gunicorn>=21.2.0",
     "wait-for-it>=2.2.2",
 ]
 
-[tool.pdm]
-distribution = false
+[tool.uv]
+package = false
+python-downloads = "manual"
+default-groups = ["lint"]
 
-[tool.pdm.scripts]
-lint = "pre-commit run --all-files"
+[[tool.uv.index]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple"
